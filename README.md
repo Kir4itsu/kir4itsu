@@ -1,5 +1,6 @@
 # I'm Kiraitsu 👋
 ![Kiraitsu GitHub stats](https://github-readme-stats.vercel.app/api?username=Kir4itsu&show_icons=true&theme=material-palenight)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=anuraghazra&theme=material-palenight)](https://github.com/anuraghazra/github-readme-stats&theme=material-palenight)
 
 
 
