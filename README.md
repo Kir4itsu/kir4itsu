@@ -1,6 +1,6 @@
 # I'm Kiraitsu 👋
-
-[![Kiraitsu GitHub stats](https://github-readme-stats.vercel.app/api?username=Kir4itsu)](https://github.com/Kir4itsu/github-readme-stats&theme=material-palenight)
+![Kiraitsu GitHub stats](https://github-readme-stats.vercel.app/api?username=Kir4itsu&show_icons=true&theme=material-palenight)
+[![](https://github-readme-stats.vercel.app/api?username=Kir4itsu)](https://github.com/Kir4itsu/github-readme-stats&theme=)
 
 
 
