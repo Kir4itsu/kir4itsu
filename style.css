@@ -76,6 +76,25 @@
             transition: background 0.3s ease-in-out;
         }
         
+        .translate-button {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            background: var(--primary);
+            color: var(--light);
+            border: 1px solid var(--accent);
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+    
+        .translate-button:hover {
+            background: var(--accent);
+            color: var(--dark);
+        }
+    
         .nav-links {
             display: flex;
             gap: 30px;
