@@ -10,6 +10,7 @@
 <body>
     <header>
         <div class="nav-bar">
+            <button class="burger-menu" onclick="toggleMenu()">☰</button>
             <div class="nav-links">
                 <a href="#about">About</a>
                 <a href="#skills">Skills</a>
@@ -26,7 +27,7 @@
     <div class="container">
         <div class="profile-section" id="about">
             <div class="profile-pic">
-                <div>⌨️</div>
+                <img src="Profile.jpg" alt="Profile Picture">
             </div>
             <div class="profile-info">
                 <h1>Kiraitsu</h1>
@@ -34,16 +35,16 @@
                 <p>Full-stack developer dengan passion untuk pengembangan game dan web development. Mengkombinasikan skill teknis dengan kreativitas untuk membuat aplikasi yang menarik dan interaktif.</p>
                 
                 <div class="social-links">
-                    <a href="https://github.com/yourusername" class="social-icon" title="GitHub">
+                    <a href="https://github.com/Kir4itsu" class="social-icon" title="GitHub">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://linkedin.com/in/yourusername" class="social-icon" title="LinkedIn">
-                        <i class="fab fa-linkedin-in"></i>
+                    <a href="https://steamcommunity.com/id/Kir4itsu/" class="social-icon" title="Steam">
+                        <i class="fab fa-steam"></i>
                     </a>
-                    <a href="https://twitter.com/yourusername" class="social-icon" title="Twitter">
-                        <i class="fab fa-twitter"></i>
+                    <a href="https://www.facebook.com/Kir1170" class="social-icon" title="Facebook">
+                        <i class="fab fa-facebook"></i>
                     </a>
-                    <a href="mailto:email@example.com" class="social-icon" title="Email">
+                    <a href="mailto:kir.acount@gmail.com" class="social-icon" title="Email">
                         <i class="fas fa-envelope"></i>
                     </a>
                 </div>
@@ -53,6 +54,9 @@
         <div class="section" id="skills">
             <h2><i class="fas fa-code"></i> Technical Skills</h2>
             <div class="tech-skills">
+                <div class="tech-skill">
+                    <i class="fab fa-php"></i> PHP
+                </div>
                 <div class="tech-skill">
                     <i class="fab fa-html5"></i>
                     HTML5
@@ -76,6 +80,12 @@
                 <div class="tech-skill">
                     <i class="fab fa-python"></i>
                     Python
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-java"></i> Java
+                </div>
+                <div class="tech-skill">
+                    <i class="fas fa-mobile-alt"></i> Kotlin
                 </div>
                 <div class="tech-skill">
                     <i class="fas fa-database"></i>
@@ -109,9 +119,9 @@
             <div class="skill-bar">
                 <div class="skill-name">
                     <span>MOBA</span>
-                    <span>78%</span>
+                    <span>18%</span>
                 </div>
-                <div class="skill-level" style="width: 78%"></div>
+                <div class="skill-level" style="width: 18%"></div>
             </div>
             <div class="skill-bar">
                 <div class="skill-name">
@@ -199,23 +209,9 @@
         <div class="section" id="github-stats">
             <h2><i class="fab fa-github"></i> GitHub Stats</h2>
             <div class="github-stats">
-                <div class="github-stat">
-                    <div class="stat-number">42+</div>
-                    <div class="stat-label">Repositories</div>
-                </div>
-                <div class="github-stat">
-                    <div class="stat-number">356</div>
-                    <div class="stat-label">Contributions</div>
-                </div>
-                <div class="github-stat">
-                    <div class="stat-number">18</div>
-                    <div class="stat-label">Stars</div>
-                </div>
-                <div class="github-stat">
-                    <div class="stat-number">24</div>
-                    <div class="stat-label">Forks</div>
-                </div>
-            </div>
+                <img alt="GitHub Stats" src="https://github-readme-stats.vercel.app/api?username=Kir4itsu&show_icons=true&theme=material-palenight">
+                <img alt="Most Used Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=material-palenight">
+            </div>                       
         </div>
         
         <div class="platforms-section" id="gaming">
@@ -292,7 +288,7 @@
                     <a href="#contact">Contact</a>
                 </div>
                 <div class="copyright">
-                    &copy; 2025 DEV_GAMER Portfolio | Made with 💜 and code
+                    &copy; 2025 Kiraitsu Portfolio | Made with 💜 and code
                 </div>
             </div>
         </footer>
@@ -320,6 +316,12 @@
                 particlesContainer.appendChild(particle);
             }
         }
+        
+        function toggleMenu() {
+            let nav = document.querySelector(".nav-links");
+            nav.style.display = (nav.style.display === "flex") ? "none" : "flex";
+        }
+        
         
         // Smooth scrolling for navigation links
         document.addEventListener('DOMContentLoaded', function() {
@@ -440,6 +442,18 @@
                         requestAnimationFrame(updateCounter);
                     }
                 };
+
+                async function getGitHubStats() {
+                    const response = await fetch("https://api.github.com/users/Kir4itsu");
+                    const data = await response.json();
+                
+                    document.getElementById("repo-count").textContent = data.public_repos;
+                    document.getElementById("follower-count").textContent = data.followers;
+                    document.getElementById("following-count").textContent = data.following;
+                }
+                
+                document.addEventListener("DOMContentLoaded", getGitHubStats);
+                
                 
                 // Use Intersection Observer to start the counter when in view
                 const counterObserver = new IntersectionObserver((entries) => {

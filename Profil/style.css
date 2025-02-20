@@ -26,7 +26,7 @@
         
         header {
             position: relative;
-            height: 300px;
+            height: 200px;
             background: linear-gradient(45deg, #0a0a1a, #16213e);
             overflow: hidden;
             border-bottom: 3px solid var(--accent);
@@ -67,12 +67,13 @@
         }
         
         .nav-bar {
-            position: absolute;
-            top: 20px;
+            position: fixed;
+            top: 10px;
             width: 100%;
             display: flex;
             justify-content: center;
             z-index: 100;
+            transition: background 0.3s ease-in-out;
         }
         
         .nav-links {
@@ -83,6 +84,15 @@
             padding: 10px 30px;
             border-radius: 50px;
             border: 1px solid var(--accent);
+        }
+
+        .burger-menu {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: var(--light);
         }
         
         .nav-links a {
@@ -122,6 +132,16 @@
             font-size: 80px;
             color: var(--accent);
         }
+
+        .profile-pic img {
+            width: 150%;
+            height: 150%;
+            top: 50%;
+            left: 50%;
+            transform: translate(0%, 0%);
+            object-fit: cover; /* Agar gambar tetap proporsional */
+        }
+        
         
         .profile-info {
             flex: 1;
@@ -391,9 +411,21 @@
         
         .github-stats {
             display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-top: 25px;
+            flex-direction: column; /* Biar stacked di layar kecil */
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+        }
+        
+        .github-stats img {
+            width: 100%; /* Biar fleksibel */
+            max-width: 500px; /* Tetap ada batas */
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
         }
         
         .github-stat {
@@ -433,6 +465,7 @@
             flex-wrap: wrap;
             gap: 20px;
             margin-top: 25px;
+            padding: 25px;
         }
         
         .contact-form {
@@ -556,13 +589,38 @@
                 margin-bottom: 20px;
             }
             
+            /* Sembunyikan menu saat layar kecil */
             .nav-links {
-                padding: 8px 15px;
-                gap: 15px;
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 60px;
+                right: 10px;
+                background: rgba(10, 10, 26, 0.9);
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 255, 0, 0.3);
             }
-            
+
             .nav-links a {
                 font-size: 0.8rem;
+                display: block;
+                padding: 10px 15px;
+                text-align: center;
+            }
+
+            /* Tombol Burger */
+            .burger-menu {
+                display: block;
+                font-size: 24px;
+                cursor: pointer;
+                background: none;
+                border: none;
+                color: var(--light);
+                position: absolute;
+                right: 20px;
+                top: 15px;
+                z-index: 1001;
             }
             
             .platform-icons {
@@ -570,6 +628,11 @@
             }
             
             .github-stats {
-                flex-direction: column;
+                max-width: 100%; /* Ambil seluruh lebar layar */
+                padding: 10px;
+            }
+        
+            .github-stats img {
+                max-width: 90%; /* Supaya tetap besar di layar kecil */
             }
         }
