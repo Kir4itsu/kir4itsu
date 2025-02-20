@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kiraitsu Portfolio</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="nav-bar">
+            <button class="burger-menu" onclick="toggleMenu()">☰</button>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#gaming">Gaming</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+        <div class="header-animation" id="particles">
+            <!-- Particles will be added via JavaScript -->
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="profile-section" id="about">
+            <div class="profile-pic">
+                <img src="Profile.jpg" alt="Profile Picture">
+            </div>
+            <div class="profile-info">
+                <h1>Kiraitsu</h1>
+                <p class="tag-line">Code by Day, Game by Night</p>
+                <p>Full-stack developer dengan passion untuk pengembangan game dan web development. Mengkombinasikan skill teknis dengan kreativitas untuk membuat aplikasi yang menarik dan interaktif.</p>
+                
+                <div class="social-links">
+                    <a href="https://github.com/Kir4itsu" class="social-icon" title="GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://steamcommunity.com/id/Kir4itsu/" class="social-icon" title="Steam">
+                        <i class="fab fa-steam"></i>
+                    </a>
+                    <a href="https://www.facebook.com/Kir1170" class="social-icon" title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="mailto:kir.acount@gmail.com" class="social-icon" title="Email">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="skills">
+            <h2><i class="fas fa-code"></i> Technical Skills</h2>
+            <div class="tech-skills">
+                <div class="tech-skill">
+                    <i class="fab fa-php"></i> PHP
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-html5"></i>
+                    HTML5
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-css3-alt"></i>
+                    CSS3
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-js"></i>
+                    JavaScript
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-react"></i>
+                    React
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-node-js"></i>
+                    Node.js
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-python"></i>
+                    Python
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-java"></i> Java
+                </div>
+                <div class="tech-skill">
+                    <i class="fas fa-mobile-alt"></i> Kotlin
+                </div>
+                <div class="tech-skill">
+                    <i class="fas fa-database"></i>
+                    SQL
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-unity"></i>
+                    Unity
+                </div>
+                <div class="tech-skill">
+                    <i class="fab fa-git-alt"></i>
+                    Git
+                </div>
+            </div>
+            
+            <h2 style="margin-top: 30px;"><i class="fas fa-gamepad"></i> Gaming Experience</h2>
+            <div class="skill-bar">
+                <div class="skill-name">
+                    <span>Game Development</span>
+                    <span>85%</span>
+                </div>
+                <div class="skill-level" style="width: 85%"></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-name">
+                    <span>FPS Games</span>
+                    <span>92%</span>
+                </div>
+                <div class="skill-level" style="width: 92%"></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-name">
+                    <span>MOBA</span>
+                    <span>18%</span>
+                </div>
+                <div class="skill-level" style="width: 18%"></div>
+            </div>
+            <div class="skill-bar">
+                <div class="skill-name">
+                    <span>Open World RPG</span>
+                    <span>88%</span>
+                </div>
+                <div class="skill-level" style="width: 88%"></div>
+            </div>
+        </div>
+        
+        <div class="section" id="projects">
+            <h2><i class="fas fa-laptop-code"></i> Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Game Stats Tracker</h3>
+                        <p>Aplikasi web untuk melacak statistik permainan dari berbagai game populer dengan visualisasi data interaktif.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">React</span>
+                            <span class="project-tag">Node.js</span>
+                            <span class="project-tag">MongoDB</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> Source Code
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-external-link-alt"></i> Live Demo
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Pixel Adventure</h3>
+                        <p>Game platformer 2D dengan karakter pixel art, level progressif, dan sistem skor online.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">Unity</span>
+                            <span class="project-tag">C#</span>
+                            <span class="project-tag">WebGL</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> Source Code
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-play"></i> Play Game
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-image">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Discord Game Bot</h3>
+                        <p>Bot Discord untuk mengelola permainan multiplayer, turnamen, dan leaderboards di server gaming.</p>
+                        <div class="project-tags">
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">Discord.js</span>
+                            <span class="project-tag">Firebase</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">
+                                <i class="fab fa-github"></i> Source Code
+                            </a>
+                            <a href="#" class="project-link">
+                                <i class="fas fa-book"></i> Documentation
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="github-stats">
+            <h2><i class="fab fa-github"></i> GitHub Stats</h2>
+            <div class="github-stats">
+                <img alt="GitHub Stats" src="https://github-readme-stats.vercel.app/api?username=Kir4itsu&show_icons=true&theme=material-palenight">
+                <img alt="Most Used Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=material-palenight">
+            </div>                       
+        </div>
+        
+        <div class="platforms-section" id="gaming">
+            <h2><i class="fas fa-headset"></i> Gaming Platforms</h2>
+            <p>Temukan saya di berbagai platform gaming. Mari bermain bersama!</p>
+            <div class="platform-icons">
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fab fa-steam"></i>
+                    </div>
+                    <div class="platform-name">Steam</div>
+                </div>
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <div class="platform-name">Epic Games</div>
+                </div>
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fas fa-ghost"></i>
+                    </div>
+                    <div class="platform-name">Battle.net</div>
+                </div>
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fab fa-playstation"></i>
+                    </div>
+                    <div class="platform-name">PlayStation</div>
+                </div>
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fab fa-xbox"></i>
+                    </div>
+                    <div class="platform-name">Xbox</div>
+                </div>
+                <div class="platform">
+                    <div class="platform-icon">
+                        <i class="fas fa-chess-knight"></i>
+                    </div>
+                    <div class="platform-name">Chess.com</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section" id="contact">
+            <h2><i class="fas fa-envelope"></i> Contact Me</h2>
+            <div class="contact-section">
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" class="form-control" placeholder="Your name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="Your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" class="form-control" rows="5" placeholder="Your message"></textarea>
+                    </div>
+                    <button type="submit" class="glow-button">Send Message</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#gaming">Gaming</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Kiraitsu Portfolio | Made with 💜 and code
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Add particles animation
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const numParticles = 50;
+            
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                // Random positions
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 8;
+                
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.animationDelay = `${delay}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        function toggleMenu() {
+            let nav = document.querySelector(".nav-links");
+            nav.style.display = (nav.style.display === "flex") ? "none" : "flex";
+        }
+        
+        
+        // Smooth scrolling for navigation links
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Smooth scroll function
+            const links = document.querySelectorAll('.nav-links a, .footer-links a');
+            
+            for (const link of links) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 70,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+            
+            // Form submission
+            const contactForm = document.querySelector('.contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const message = document.getElementById('message').value;
+                    
+                    // Simple validation
+                    if (!name || !email || !message) {
+                        alert('Please fill in all fields');
+                        return;
+                    }
+                    
+                    // In a real application, you would send this data to a server
+                    // For this demo, we'll just show a success message
+                    alert(`Thanks for your message, ${name}! I'll get back to you soon.`);
+                    
+                    // Reset form
+                    contactForm.reset();
+                });
+            }
+            
+            // Add animation to skill bars when they come into view
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.width = entry.target.getAttribute('data-width');
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            // Get all skill bars and set their initial width to 0
+            const skillBars = document.querySelectorAll('.skill-level');
+            skillBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.setAttribute('data-width', width);
+                bar.style.width = '0';
+                
+                // Observe each skill bar
+                observer.observe(bar);
+            });
+            
+            // Add typing effect to the headline
+            const headline = document.querySelector('h1');
+            if (headline) {
+                const text = headline.textContent;
+                headline.textContent = '';
+                
+                let i = 0;
+                const typeWriter = () => {
+                    if (i < text.length) {
+                        headline.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, 100);
+                    }
+                };
+                
+                setTimeout(typeWriter, 1000);
+            }
+            
+            // Add hover effects to project cards
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.boxShadow = '0 15px 30px rgba(138, 43, 226, 0.3)';
+                    this.style.borderColor = 'var(--accent)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                    this.style.boxShadow = '';
+                    this.style.borderColor = 'var(--primary)';
+                });
+            });
+            
+            // Add counter animation to GitHub stats
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const finalValue = parseInt(stat.textContent);
+                stat.textContent = '0';
+                
+                let currentValue = 0;
+                const increment = Math.ceil(finalValue / 30); // Animate over 30 steps
+                
+                const updateCounter = () => {
+                    currentValue += increment;
+                    
+                    if (currentValue >= finalValue) {
+                        stat.textContent = `${finalValue}${stat.textContent.includes('+') ? '+' : ''}`;
+                    } else {
+                        stat.textContent = currentValue;
+                        requestAnimationFrame(updateCounter);
+                    }
+                };
+
+                async function getGitHubStats() {
+                    const response = await fetch("https://api.github.com/users/Kir4itsu");
+                    const data = await response.json();
+                
+                    document.getElementById("repo-count").textContent = data.public_repos;
+                    document.getElementById("follower-count").textContent = data.followers;
+                    document.getElementById("following-count").textContent = data.following;
+                }
+                
+                document.addEventListener("DOMContentLoaded", getGitHubStats);
+                
+                
+                // Use Intersection Observer to start the counter when in view
+                const counterObserver = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        requestAnimationFrame(updateCounter);
+                        counterObserver.unobserve(stat);
+                    }
+                }, { threshold: 0.5 });
+                
+                counterObserver.observe(stat);
+            });
+        });
+    </script>
+</body>
+</html>
