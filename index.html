@@ -366,7 +366,7 @@
                 "gaming-description": "Find me on various gaming platforms. Let's play together!"
                 }
         };
-    
+
         let currentLang = "id";
 
         function translatePage() {
@@ -378,26 +378,30 @@
                 }
             });
         }
-
+    
         function animateTextChange(element, newText) {
             let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let currentText = element.innerText;
             let iterations = 0;
+    
             let interval = setInterval(() => {
-                element.innerText = element.innerText.split("").map((char, index) => {
+                let tempText = newText.split("").map((char, index) => {
                     if (index < iterations) {
-                        return newText[index] || "";
+                        return newText[index];
                     }
                     return chars[Math.floor(Math.random() * chars.length)];
                 }).join("");
-
+    
+                element.innerText = tempText;
+                
                 if (iterations >= newText.length) {
                     clearInterval(interval);
                     element.innerText = newText;
                 }
                 iterations += 1;
-            }, 50);
+            }, 100);
         }
-
+    
         document.getElementById("translate-btn").addEventListener("click", translatePage);
 
         // Smooth scrolling for navigation links
