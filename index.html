@@ -18,6 +18,7 @@
                 <a href="#gaming">Gaming</a>
                 <a href="#contact">Contact</a>
             </div>
+            <button id="translate-btn" class="translate-button">🌍 Translate</button>
         </div>
         <div class="header-animation" id="particles">
             <!-- Particles will be added via JavaScript -->
@@ -32,7 +33,7 @@
             <div class="profile-info">
                 <h1>Kiraitsu</h1>
                 <p class="tag-line">Code by Day, Game by Night</p>
-                <p>Full-stack developer dengan passion untuk pengembangan game dan web development. Mengkombinasikan skill teknis dengan kreativitas untuk membuat aplikasi yang menarik dan interaktif.</p>
+                <p data-translate="profile-description">Full-stack developer dengan passion untuk pengembangan game dan web development. Mengkombinasikan skill teknis dengan kreativitas untuk membuat aplikasi yang menarik dan interaktif.</p>
                 
                 <div class="social-links">
                     <a href="https://github.com/Kir4itsu" class="social-icon" title="GitHub">
@@ -140,8 +141,8 @@
                         <i class="fas fa-gamepad"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Game Stats Tracker</h3>
-                        <p>Aplikasi web untuk melacak statistik permainan dari berbagai game populer dengan visualisasi data interaktif.</p>
+                        <h3 class="project-title" data-translate="project-title-1">Game Stats Tracker</h3>
+                        <p data-translate="project-description-1">Aplikasi web untuk melacak statistik permainan dari berbagai game populer dengan visualisasi data interaktif.</p>
                         <div class="project-tags">
                             <span class="project-tag">React</span>
                             <span class="project-tag">Node.js</span>
@@ -163,8 +164,8 @@
                         <i class="fas fa-user-ninja"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Pixel Adventure</h3>
-                        <p>Game platformer 2D dengan karakter pixel art, level progressif, dan sistem skor online.</p>
+                        <h3 class="project-title" data-translate="project-title-2">Pixel Adventure</h3>
+                        <p data-translate="project-description-2">Game platformer 2D dengan karakter pixel art, level progressif, dan sistem skor online.</p>
                         <div class="project-tags">
                             <span class="project-tag">Unity</span>
                             <span class="project-tag">C#</span>
@@ -186,8 +187,8 @@
                         <i class="fas fa-robot"></i>
                     </div>
                     <div class="project-content">
-                        <h3 class="project-title">Discord Game Bot</h3>
-                        <p>Bot Discord untuk mengelola permainan multiplayer, turnamen, dan leaderboards di server gaming.</p>
+                        <h3 class="project-title" data-translate="project-title-3">Discord Game Bot</h3>
+                        <p data-translate="project-description-3">Bot Discord untuk mengelola permainan multiplayer, turnamen, dan leaderboards di server gaming.</p>
                         <div class="project-tags">
                             <span class="project-tag">JavaScript</span>
                             <span class="project-tag">Discord.js</span>
@@ -216,7 +217,7 @@
         
         <div class="platforms-section" id="gaming">
             <h2><i class="fas fa-headset"></i> Gaming Platforms</h2>
-            <p>Temukan saya di berbagai platform gaming. Mari bermain bersama!</p>
+            <p data-translate="gaming-description">Temukan saya di berbagai platform gaming. Mari bermain bersama!</p>
             <div class="platform-icons">
                 <div class="platform">
                     <div class="platform-icon">
@@ -322,7 +323,83 @@
             nav.style.display = (nav.style.display === "flex") ? "none" : "flex";
         }
         
-        
+        //Translate on Footer
+        const translations = {
+            "id": {
+                "about": "Tentang",
+                "skills": "Keahlian",
+                "projects": "Proyek",
+                "gaming": "Gaming",
+                "contact": "Kontak",
+                "Technical Skills": "Keahlian Teknis",
+                "Gaming Experience": "Pengalaman Gaming",
+                "Contact Me": "Hubungi Saya",
+                "Send Message": "Kirim Pesan",
+                "profile-description": "Full-stack developer dengan passion untuk pengembangan game dan web development. Mengkombinasikan skill teknis dengan kreativitas untuk membuat aplikasi yang menarik dan interaktif.",
+                "projects": "Proyek",
+                "project-title-1": "Pelacak Statistik Game",
+                "project-description-1": "Aplikasi web untuk melacak statistik permainan dari berbagai game populer dengan visualisasi data interaktif.",
+                "project-title-2": "Petualangan Pixel",
+                "project-description-2": "Game platformer 2D dengan karakter pixel art, level progresif, dan sistem skor online.",
+                "project-title-3": "Bot Game Discord",
+                "project-description-3": "Bot Discord untuk mengelola permainan multiplayer, turnamen, dan leaderboard di server gaming.",
+                "gaming-description": "Temukan saya di berbagai platform gaming. Mari bermain bersama!"
+                },
+            "en": {
+                "about": "About",
+                "skills": "Skills",
+                "projects": "Projects",
+                "gaming": "Gaming",
+                "contact": "Contact",
+                "Technical Skills": "Technical Skills",
+                "Gaming Experience": "Gaming Experience",
+                "Contact Me": "Contact Me",
+                "Send Message": "Send Message",
+                "profile-description": "Full-stack developer with a passion for game development and web development. Combining technical skills with creativity to create engaging and interactive applications.",
+                "projects": "Projects",
+                "project-title-1": "Game Stats Tracker",
+                "project-description-1": "A web application to track game statistics from various popular games with interactive data visualization.",
+                "project-title-2": "Pixel Adventure",
+                "project-description-2": "A 2D platformer game with pixel art characters, progressive levels, and an online score system.",
+                "project-title-3": "Discord Game Bot",
+                "project-description-3": "A Discord bot to manage multiplayer games, tournaments, and leaderboards in gaming servers.",
+                "gaming-description": "Find me on various gaming platforms. Let's play together!"
+                }
+        };
+    
+        let currentLang = "id";
+
+        function translatePage() {
+            currentLang = currentLang === "id" ? "en" : "id";
+            document.querySelectorAll("[data-translate]").forEach(el => {
+                let key = el.getAttribute("data-translate");
+                if (translations[currentLang][key]) {
+                    animateTextChange(el, translations[currentLang][key]);
+                }
+            });
+        }
+
+        function animateTextChange(element, newText) {
+            let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let iterations = 0;
+            let interval = setInterval(() => {
+                element.innerText = element.innerText.split("").map((char, index) => {
+                    if (index < iterations) {
+                        return newText[index] || "";
+                    }
+                    return chars[Math.floor(Math.random() * chars.length)];
+                }).join("");
+
+                if (iterations >= newText.length) {
+                    clearInterval(interval);
+                    element.innerText = newText;
+                }
+                iterations += 1;
+            }, 50);
+        }
+
+        document.getElementById("translate-btn").addEventListener("click", translatePage);
+
         // Smooth scrolling for navigation links
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
