@@ -109,8 +109,8 @@
 <div align="center">
 
 <p align="center"><code>╔══════════════════════════════════════════════════════════╗</code></p>
-<p align="center"><code>║&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
-<p align="center"><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
+<p align="center"><code>&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
+<p align="center"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
 <p align="center"><code>╚══════════════════════════════════════════════════════════╝</code></p>
 
 ![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=C724B1&style=flat-square&label=PROFILE+VIEWS)
