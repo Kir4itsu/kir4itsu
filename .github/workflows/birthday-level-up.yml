@@ -1,0 +1,33 @@
+name: 🎂 Birthday Level Up
+
+on:
+  schedule:
+    - cron: '0 0 10 7 *'  # Setiap 10 Juli jam 00:00 UTC
+  workflow_dispatch:       # Buat testing manual
+
+jobs:
+  level-up:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Calculate & Update Level
+        run: |
+          BIRTH_YEAR=2005
+          CURRENT_YEAR=$(date +%Y)
+          NEW_LEVEL=$((CURRENT_YEAR - BIRTH_YEAR))
+
+          sed -i "s/<!-- LEVEL_START -->[0-9]*<!-- LEVEL_END -->/<!-- LEVEL_START -->$NEW_LEVEL<!-- LEVEL_END -->/" README.md
+
+          echo "Level updated to: $NEW_LEVEL"
+
+      - name: Commit Changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || git commit -m "🎂 Happy Birthday Kira! Level Up to $(date +%Y - 2005 | bc)!"
+          git push
