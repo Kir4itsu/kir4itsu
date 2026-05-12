@@ -30,7 +30,7 @@
 | **Real Name** | Kiraitsu Mochizuki                                    |
 | **Location**  | 📍 Indonesia                                          |
 | **Joined**    | December 16, 2020                                     |
-| **Level**     | ⚡ 18                                                 |
+| **Level**     | ⚡ 20                                                 |
 | **Class**     | 🔥 Chaos Game Dev                                     |
 | **GitHub**    | [Kir4itsu](https://github.com/Kir4itsu)               |
 | **Email**     | kir4itsu@gmail.com                                    |
