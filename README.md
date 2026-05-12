@@ -1,39 +1,37 @@
 <!-- ══════════════════════════════════════════════════════════════════ -->
-<!--               🎮 PLAYER PROFILE: Kiraitsu                        -->
+<!--               ◈ CODEX: Kiraitsu Mochizuki                        -->
 <!-- ══════════════════════════════════════════════════════════════════ -->
 
 <div align="center">
 
-```
-╔══════════════════════════════════════════════════════════════╗
-║                  >> You Can Call Me: Kira <<                 ║
-╚══════════════════════════════════════════════════════════════╝
-```
+<p align="center"><code>╔══════════════════════════════════════════════════════════════╗</code></p>
+<p align="center"><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> You Can Call Me: Kira <<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
+<p align="center"><code>╚══════════════════════════════════════════════════════════════╝</code></p>
 
 # `< Kiraitsu Mochizuki />`
 ### `// Chaos Game Dev`
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00D4FF&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)
+![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=C724B1&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)
 
 </div>
 
 ---
 
-## 👤 Character Details
+## ◈ Character Record
 
 <table>
 <tr>
 <td>
 
-| Field         | Details                                               |
-|---------------|-------------------------------------------------------|
-| **Real Name** | Kiraitsu Mochizuki                                    |
-| **Location**  | 📍 Indonesia                                          |
-| **Joined**    | December 16, 2020                                     |
-| **Level**     | ⚡ 20                                                 |
-| **Class**     | 🔥 Chaos Game Dev                                     |
-| **GitHub**    | [Kir4itsu](https://github.com/Kir4itsu)               |
-| **Email**     | kir4itsu@gmail.com                                    |
+| Field            | Details                                         |
+|------------------|-------------------------------------------------|
+| **Designation**  | Kiraitsu Mochizuki                              |
+| **Origin**       | 📍 Indonesia                                    |
+| **First Contact**| December 16, 2020                               |
+| **Clearance**    | ⚡ Level <!-- LEVEL_START -->20<!-- LEVEL_END --> |
+| **Archetype**    | 🔥 Chaos Game Dev                               |
+| **GitHub**       | [Kir4itsu](https://github.com/Kir4itsu)         |
+| **Dispatch**     | kir4itsu@gmail.com                              |
 
 </td>
 <td>
@@ -43,10 +41,10 @@
 | **Code Hit Points** | 40/100    | `███████░░░░░░░░░░░░` 40%         |
 | **Debug Mana**      | 50/100    | `██████████░░░░░░░░░` 50%         |
 | **Experience**      | 30,000 XP | `███████░░░░░░░░░░░░` 37%         |
-| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
+| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=C724B1&style=flat-square) |
 | **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3AKir4itsu%2Btype%3Apr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
 | **Bugs Fixed**      | 20        | ![](https://img.shields.io/badge/Bugs_Fixed-20-0088ff?style=flat-square)  |
-| **Lines of Code**   | 22,450    | ![](https://img.shields.io/badge/LOC-22%2C450-1a3a6b?style=flat-square)  |
+| **Lines of Code**   | 22,450    | ![](https://img.shields.io/badge/LOC-22%2C450-00d4ff?style=flat-square)  |
 
 </td>
 </tr>
@@ -54,78 +52,55 @@
 
 ---
 
-## 🔗 Vault — Connections
- 
-[![GitHub](https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=00d4ff)](https://github.com/Kir4itsu)
-[![Steam](https://img.shields.io/badge/Steam-0a0e1a?style=for-the-badge&logo=steam&logoColor=0088ff)](https://steamcommunity.com/id/Kir4itsu/)
-[![Discord](https://img.shields.io/badge/Discord-0a0e1a?style=for-the-badge&logo=discord&logoColor=7b2fff)](https://discord.com/users/775314296661213194)
-[![Instagram](https://img.shields.io/badge/Instagram-0a0e1a?style=for-the-badge&logo=instagram&logoColor=e1306c)](https://www.instagram.com/kir4itsu/)
-[![Facebook](https://img.shields.io/badge/Facebook-0a0e1a?style=for-the-badge&logo=facebook&logoColor=1877f2)](https://www.facebook.com/Kir1170)
-[![TikTok](https://img.shields.io/badge/TikTok-0a0e1a?style=for-the-badge&logo=tiktok&logoColor=00d4ff)](https://www.tiktok.com/@kiraitsu)
-[![Spotify](https://img.shields.io/badge/Spotify-0a0e1a?style=for-the-badge&logo=spotify&logoColor=1db954)](https://open.spotify.com/user/Kiraitsu)
- 
+## ◈ Tech Arsenal
+
+**— Code —**
+
+![C++](https://img.shields.io/badge/C++-0d0221?style=for-the-badge&logo=cplusplus&logoColor=00d4ff)
+![C](https://img.shields.io/badge/C-0d0221?style=for-the-badge&logo=c&logoColor=C724B1)
+![C#](https://img.shields.io/badge/C%23-0d0221?style=for-the-badge&logo=csharp&logoColor=7b2fff)
+![Java](https://img.shields.io/badge/Java-0d0221?style=for-the-badge&logo=openjdk&logoColor=00d4ff)
+![Python](https://img.shields.io/badge/Python-0d0221?style=for-the-badge&logo=python&logoColor=C724B1)
+![JavaScript](https://img.shields.io/badge/JavaScript-0d0221?style=for-the-badge&logo=javascript&logoColor=00d4ff)
+![HTML5](https://img.shields.io/badge/HTML5-0d0221?style=for-the-badge&logo=html5&logoColor=7b2fff)
+![CSS3](https://img.shields.io/badge/CSS3-0d0221?style=for-the-badge&logo=css3&logoColor=C724B1)
+![PHP](https://img.shields.io/badge/PHP-0d0221?style=for-the-badge&logo=php&logoColor=00d4ff)
+![Flutter](https://img.shields.io/badge/Flutter-0d0221?style=for-the-badge&logo=flutter&logoColor=7b2fff)
+![React](https://img.shields.io/badge/React-0d0221?style=for-the-badge&logo=react&logoColor=00d4ff)
+![Node.js](https://img.shields.io/badge/Node.js-0d0221?style=for-the-badge&logo=nodedotjs&logoColor=C724B1)
+![Docker](https://img.shields.io/badge/Docker-0d0221?style=for-the-badge&logo=docker&logoColor=00d4ff)
+![Git](https://img.shields.io/badge/Git-0d0221?style=for-the-badge&logo=git&logoColor=7b2fff)
+
+**— Creative —**
+
+![Photoshop](https://img.shields.io/badge/Photoshop-0d0221?style=for-the-badge&logo=adobephotoshop&logoColor=C724B1)
+![After Effects](https://img.shields.io/badge/After_Effects-0d0221?style=for-the-badge&logo=adobeaftereffects&logoColor=7b2fff)
+![Premiere Pro](https://img.shields.io/badge/Premiere_Pro-0d0221?style=for-the-badge&logo=adobepremierepro&logoColor=00d4ff)
+
 ---
 
-## 🎒 Skill Tree
+## ◈ Signal Channels
 
-| Language / Tool         | Mastery | Progress                         |
-|-------------------------|---------|----------------------------------|
-| **C / C++ / C# / Java** | 95%     | `███████████████████░` 95%       |
-| **HTML / CSS / PHP**    | 95%     | `███████████████████░` 95%       |
-| **Python / Data Sci**   | 88%     | `█████████████████░░░` 88%       |
-| **JavaScript / Web**    | 88%     | `█████████████████░░░` 88%       |
-| **Mobile (Flutter)**    | 85%     | `█████████████████░░░` 85%       |
-| **Backend / DevOps**    | 82%     | `████████████████░░░░` 82%       |
-| **Git**                 | 78%     | `███████████████░░░░░` 78%       |
+[![GitHub](https://img.shields.io/badge/GitHub-0d0221?style=for-the-badge&logo=github&logoColor=00d4ff)](https://github.com/Kir4itsu)
+[![Steam](https://img.shields.io/badge/Steam-0d0221?style=for-the-badge&logo=steam&logoColor=C724B1)](https://steamcommunity.com/id/Kir4itsu/)
+[![Epic Games](https://img.shields.io/badge/Epic_Games-0d0221?style=for-the-badge&logo=epicgames&logoColor=7b2fff)](https://www.epicgames.com/id/Kir4itsu)
+[![Discord](https://img.shields.io/badge/Discord-0d0221?style=for-the-badge&logo=discord&logoColor=00d4ff)](https://discord.com/users/775314296661213194)
+[![TikTok](https://img.shields.io/badge/TikTok-0d0221?style=for-the-badge&logo=tiktok&logoColor=C724B1)](https://www.tiktok.com/@kiraitsu)
+[![Spotify](https://img.shields.io/badge/Spotify-0d0221?style=for-the-badge&logo=spotify&logoColor=1db954)](https://open.spotify.com/user/Kiraitsu)
+[![Instagram](https://img.shields.io/badge/Instagram-0d0221?style=for-the-badge&logo=instagram&logoColor=7b2fff)](https://www.instagram.com/kir4itsu/)
+[![Facebook](https://img.shields.io/badge/Facebook-0d0221?style=for-the-badge&logo=facebook&logoColor=00d4ff)](https://www.facebook.com/Kir1170)
 
 ---
 
-## 🛠️ Tech Arsenal
+## ◈ Field Report
 
 <div align="center">
 
-![C++](https://img.shields.io/badge/C++-00d4ff?style=for-the-badge&logo=cplusplus&logoColor=0a0e1a)
-![C](https://img.shields.io/badge/C-0088ff?style=for-the-badge&logo=c&logoColor=white)
-![C#](https://img.shields.io/badge/C%23-7b2fff?style=for-the-badge&logo=csharp&logoColor=white)
-![Java](https://img.shields.io/badge/Java-0a0e1a?style=for-the-badge&logo=openjdk&logoColor=00d4ff)
-![Python](https://img.shields.io/badge/Python-0a0e1a?style=for-the-badge&logo=python&logoColor=7b2fff)
-![JavaScript](https://img.shields.io/badge/JavaScript-0a0e1a?style=for-the-badge&logo=javascript&logoColor=00d4ff)
-![HTML5](https://img.shields.io/badge/HTML5-0a0e1a?style=for-the-badge&logo=html5&logoColor=0088ff)
-![CSS3](https://img.shields.io/badge/CSS3-0a0e1a?style=for-the-badge&logo=css3&logoColor=7b2fff)
-![PHP](https://img.shields.io/badge/PHP-0a0e1a?style=for-the-badge&logo=php&logoColor=00d4ff)
-![Flutter](https://img.shields.io/badge/Flutter-0a0e1a?style=for-the-badge&logo=flutter&logoColor=0088ff)
-![React](https://img.shields.io/badge/React-0a0e1a?style=for-the-badge&logo=react&logoColor=00d4ff)
-![Node.js](https://img.shields.io/badge/Node.js-0a0e1a?style=for-the-badge&logo=nodedotjs&logoColor=7b2fff)
-![Docker](https://img.shields.io/badge/Docker-0a0e1a?style=for-the-badge&logo=docker&logoColor=0088ff)
-![Git](https://img.shields.io/badge/Git-0a0e1a?style=for-the-badge&logo=git&logoColor=00d4ff)
+![Kiraitsu's GitHub Stats](https://github-readme-stats-salesp07.vercel.app/api?username=Kir4itsu&show_icons=true&count_private=true&theme=tokyonight&border_color=7b2fff&bg_color=0d0221&title_color=C724B1&icon_color=7b2fff&text_color=00d4ff&hide_border=false)
 
-</div>
+![Top Languages](https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=tokyonight&border_color=7b2fff&bg_color=0d0221&title_color=C724B1&text_color=00d4ff&count_private=true&langs_count=8)
 
----
-
-## 📜 7 Developer Sins
-
-| Sin                            | Score | Bar                        |
-|--------------------------------|-------|----------------------------|
-| **Pride** *(Refactors)*        | 8     | `████░░░░░░░░░░░░░░░░` 32% |
-| **Envy** *(Forked Repos)*      | 10    | `█████░░░░░░░░░░░░░░░` 40% |
-| **Wrath** *(Debug Rage)*       | 12    | `██████░░░░░░░░░░░░░░` 48% |
-| **Sloth** *(Delayed PRs)*      | 5     | `██░░░░░░░░░░░░░░░░░░` 20% |
-| **Greed** *(Code Reuse)*       | 15    | `████████░░░░░░░░░░░░` 60% |
-| **Gluttony** *(Over-optimize)* | 18    | `█████████░░░░░░░░░░░` 72% |
-| **Lust** *(New Tech)*          | 25    | `█████████████░░░░░░░` 100%|
-
----
-
-## 📊 GitHub Stats
-
-<div align="center">
-
-![Kiraitsu's GitHub Stats](https://github-readme-stats-salesp07.vercel.app/api?username=Kir4itsu&show_icons=true&count_private=true&theme=tokyonight&border_color=1a3a6b&bg_color=0a0e1a&title_color=00d4ff&icon_color=7b2fff&text_color=a8c8f0&hide_border=false)
-
-![Top Languages](https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=tokyonight&border_color=1a3a6b&bg_color=0a0e1a&title_color=00d4ff&text_color=a8c8f0&count_private=true&langs_count=8)
-
-![GitHub Streak](https://streak-stats.demolab.com?user=Kir4itsu&theme=tokyonight&border=1a3a6b&background=0a0e1a&stroke=00d4ff&ring=7b2fff&fire=0088ff&currStreakLabel=00d4ff)
+![GitHub Streak](https://streak-stats.demolab.com?user=Kir4itsu&theme=tokyonight&border=7b2fff&background=0d0221&stroke=C724B1&ring=7b2fff&fire=00d4ff&currStreakLabel=C724B1)
 
 </div>
 
@@ -133,13 +108,11 @@
 
 <div align="center">
 
-```
-╔══════════════════════════════════════════════════════════╗
-║  "First, solve the problem. Then, write the code."       ║
-║                                            — Chaos Mode  ║
-╚══════════════════════════════════════════════════════════╝
-```
+<p align="center"><code>╔══════════════════════════════════════════════════════════╗</code></p>
+<p align="center"><code>║&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
+<p align="center"><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
+<p align="center"><code>╚══════════════════════════════════════════════════════════╝</code></p>
 
-![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=00d4ff&style=flat-square&label=PROFILE+VIEWS)
+![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=C724B1&style=flat-square&label=PROFILE+VIEWS)
 
 </div>
