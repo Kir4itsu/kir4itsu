@@ -6,14 +6,14 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║                  >> PLAYER PROFILE LOADED <<                 ║
+║                  >> You Can Call Me: Kira <<                 ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
 # `< Kiraitsu Mochizuki />`
 ### `// Chaos Game Dev`
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00D4FF&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Level+18+Developer+%F0%9F%9A%80)
+![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00D4FF&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)
 
 </div>
 
@@ -43,8 +43,8 @@
 | **Code Hit Points** | 40/100    | `███████░░░░░░░░░░░░` 40%         |
 | **Debug Mana**      | 50/100    | `██████████░░░░░░░░░` 50%         |
 | **Experience**      | 30,000 XP | `███████░░░░░░░░░░░░` 37%         |
-| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/search/commits?q=author:Kir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
-| **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/search/issues?q=author:Kir4itsu+type:pr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
+| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
+| **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3AKir4itsu%2Btype%3Apr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
 | **Bugs Fixed**      | 20        | ![](https://img.shields.io/badge/Bugs_Fixed-20-0088ff?style=flat-square)  |
 | **Lines of Code**   | 22,450    | ![](https://img.shields.io/badge/LOC-22%2C450-1a3a6b?style=flat-square)  |
 
