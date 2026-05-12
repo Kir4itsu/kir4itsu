@@ -1,0 +1,11 @@
+<svg width="520" height="72" viewBox="0 0 520 72" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00d4ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#C724B1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <text x="50%" y="16" font-family="monospace" font-size="13" fill="url(#grad)" text-anchor="middle">╔══════════════════════════════════════════════════════════════╗</text>
+  <text x="50%" y="38" font-family="monospace" font-size="13" fill="url(#grad)" text-anchor="middle">║            >> You Can Call Me: Kira <<            ║</text>
+  <text x="50%" y="60" font-family="monospace" font-size="13" fill="url(#grad)" text-anchor="middle">╚══════════════════════════════════════════════════════════════╝</text>
+</svg>
