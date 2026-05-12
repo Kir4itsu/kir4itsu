@@ -73,6 +73,11 @@
 ![Docker](https://img.shields.io/badge/Docker-0d0221?style=for-the-badge&logo=docker&logoColor=00d4ff)
 ![Git](https://img.shields.io/badge/Git-0d0221?style=for-the-badge&logo=git&logoColor=7b2fff)
 
+**— OS —**
+
+![Arch Linux](https://img.shields.io/badge/Arch_Linux-0d0221?style=for-the-badge&logo=archlinux&logoColor=00d4ff)
+![Windows](https://img.shields.io/badge/Windows-0d0221?style=for-the-badge&logo=windows11&logoColor=7b2fff)
+
 **— Creative —**
 
 ![Photoshop](https://img.shields.io/badge/Photoshop-0d0221?style=for-the-badge&logo=adobephotoshop&logoColor=00d4ff)
