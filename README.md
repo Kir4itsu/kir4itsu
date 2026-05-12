@@ -11,7 +11,7 @@
 
 ![Kira Box](https://raw.githubusercontent.com/Kir4itsu/kir4itsu/main/assets/kira-box.svg)
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00d4ff&center=true&vCenter=true&width=500&lines=Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Building+chaos+one+commit+at+a+time...)](https://github.com/Kir4itsu)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00d4ff&center=true&vCenter=true&width=500&lines=I+Like+Playing+Games+And+Making+Games+Too+%F0%9F%9A%80;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Building+chaos+one+commit+at+a+time...)](https://github.com/Kir4itsu)
 
 </div>
 
