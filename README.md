@@ -6,7 +6,7 @@
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║                  >> You Can Call Me: Kira <<                 ║
+║                  >> PLAYER PROFILE LOADED <<                 ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
@@ -43,8 +43,8 @@
 | **Code Hit Points** | 40/100    | `███████░░░░░░░░░░░░` 40%         |
 | **Debug Mana**      | 50/100    | `██████████░░░░░░░░░` 50%         |
 | **Experience**      | 30,000 XP | `███████░░░░░░░░░░░░` 37%         |
-| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/users/Kir4itsu&query=$.public_repos&label=Public+Repos&color=00d4ff&style=flat-square) ![commits](https://github-readme-stats-salesp07.vercel.app/api?username=Kir4itsu&show_icons=true&count_private=true&theme=tokyonight&border_color=1a3a6b&bg_color=0a0e1a&title_color=00d4ff&icon_color=7b2fff&text_color=a8c8f0&hide_border=false)
-| **Pull Requests**   | —         | ![prs](https://img.shields.io/github/issues-pr/Kir4itsu/Kir4itsu?label=PRs&color=7b2fff&style=flat-square) |
+| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/search/commits?q=author:Kir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
+| **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https://api.github.com/search/issues?q=author:Kir4itsu+type:pr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
 | **Bugs Fixed**      | 20        | ![](https://img.shields.io/badge/Bugs_Fixed-20-0088ff?style=flat-square)  |
 | **Lines of Code**   | 22,450    | ![](https://img.shields.io/badge/LOC-22%2C450-1a3a6b?style=flat-square)  |
 
