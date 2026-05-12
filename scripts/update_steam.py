@@ -18,31 +18,20 @@ games_url = (
 games_data   = fetch(games_url)
 games_owned  = games_data["response"].get("game_count", 0)
 
-# ── Perfect Games + Total Achievements ───────────────────────
-# GetBadges gives player_xp (not achievement count); use GetRecentlyPlayedGames
-# For total achievements we iterate per-game — too slow for 500+ games,
-# so we use the community stats page trick via ISteamUserStats
-stats_url = (
-    "https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/"
-)
-
-# Simpler: scrape the badge/stats endpoint for total achievement count
+# ── Perfect Games + Achievements ─────────────────────────────
 badge_url = (
     "https://api.steampowered.com/IPlayerService/GetBadges/v1/"
     f"?key={STEAM_API_KEY}&steamid={STEAM_ID}&format=json"
 )
 badge_data        = fetch(badge_url)
 response          = badge_data["response"]
-# player_xp loosely maps to achievements earned across all games
 total_achievements = response.get("player_xp", 0)
-
-# perfect = badges where border_color == 0 (platinum / all-achievements)
-badges        = response.get("badges", [])
-perfect_games = sum(1 for b in badges if b.get("border_color", -1) == 0)
+badges            = response.get("badges", [])
+perfect_games     = sum(1 for b in badges if b.get("border_color", -1) == 0)
 
 print(f"Games Owned  : {games_owned}")
 print(f"Perfect Games: {perfect_games}")
-print(f"Total XP     : {total_achievements}")
+print(f"Achievements : {total_achievements}")
 
 # ── Update README.md ─────────────────────────────────────────
 with open("README.md", "r", encoding="utf-8") as f:
@@ -53,9 +42,21 @@ def replace_marker(text, marker, value):
     replacement = f"<!-- {marker}_START -->{value}<!-- {marker}_END -->"
     return re.sub(pattern, replacement, text)
 
+def replace_badge(text, label, value):
+    # Replace the number in badge URL e.g. Steam_Games-536-
+    pattern = rf"(shields\.io/badge/{label}-)[\d,]+([-?])"
+    replacement = rf"\g<1>{value}\2"
+    return re.sub(pattern, replacement, text)
+
+# Update markers (Value column)
 readme = replace_marker(readme, "GAMES",        games_owned)
 readme = replace_marker(readme, "PERFECT",      perfect_games)
 readme = replace_marker(readme, "ACHIEVEMENTS", total_achievements)
+
+# Update badge URLs (Progress column)
+readme = replace_badge(readme, "Steam_Games",  games_owned)
+readme = replace_badge(readme, "Perfect_Games", perfect_games)
+readme = replace_badge(readme, "Achievements",  total_achievements)
 
 with open("README.md", "w", encoding="utf-8") as f:
     f.write(readme)
