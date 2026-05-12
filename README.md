@@ -55,10 +55,14 @@
 ---
 
 ## 🔗 Vault — Connections
-
+ 
 [![GitHub](https://img.shields.io/badge/GitHub-0d1117?style=for-the-badge&logo=github&logoColor=00d4ff)](https://github.com/Kir4itsu)
 [![Steam](https://img.shields.io/badge/Steam-0a0e1a?style=for-the-badge&logo=steam&logoColor=0088ff)](https://steamcommunity.com/id/Kir4itsu/)
-
+[![Epic Games](https://img.shields.io/badge/Epic_Games-0a0e1a?style=for-the-badge&logo=epicgames&logoColor=00d4ff)](https://www.epicgames.com/id/Kir4itsu)
+[![Discord](https://img.shields.io/badge/Discord-0a0e1a?style=for-the-badge&logo=discord&logoColor=7b2fff)](https://discord.com/users/775314296661213194)
+[![TikTok](https://img.shields.io/badge/TikTok-0a0e1a?style=for-the-badge&logo=tiktok&logoColor=00d4ff)](https://www.tiktok.com/@kiraitsu)
+[![Spotify](https://img.shields.io/badge/Spotify-0a0e1a?style=for-the-badge&logo=spotify&logoColor=1db954)](https://open.spotify.com/user/Kiraitsu)
+ 
 ---
 
 ## 🎒 Skill Tree
