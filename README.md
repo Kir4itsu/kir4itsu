@@ -5,7 +5,7 @@
 <div align="center">
 
 <!-- ══ HEADER ══ -->
-[![Header](https://capsule-render.vercel.app/api?type=soft&color=0:0d0221,50:00d4ff,100:7b2fff&height=220&section=header&text=Kiraitsu%20Mochizuki&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Chaos%20Game%20Dev%20%7C%20Full-Stack%20%7C%20Builder%20of%20Broken%20Things&descSize=17&descAlignY=58&descAlign=50)](https://github.com/Kir4itsu)
+[![Header](https://capsule-render.vercel.app/api?type=soft&color=0:00d4ff,100:C724B1&height=220&section=header&text=Kiraitsu%20Mochizuki&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Chaos%20Game%20Dev%20%7C%20Full-Stack%20%7C%20Builder%20of%20Broken%20Things&descSize=17&descAlignY=58&descAlign=50)](https://github.com/Kir4itsu)
 
 <br>
 
@@ -125,7 +125,7 @@
 <p><code>╚══════════════════════════════════════════════════════════╝</code></p>
 
 <!-- ══ FOOTER ══ -->
-[![Footer](https://capsule-render.vercel.app/api?type=soft&color=0:7b2fff,50:00d4ff,100:0d0221&height=120&section=footer&animation=fadeIn)](https://github.com/Kir4itsu)
+[![Footer](https://capsule-render.vercel.app/api?type=soft&color=0:C724B1,100:00d4ff&height=120&section=footer&animation=fadeIn)](https://github.com/Kir4itsu)
 
 ![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=00d4ff&style=flat-square&label=PROFILE+VIEWS)
 
