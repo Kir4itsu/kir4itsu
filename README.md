@@ -15,7 +15,8 @@
 
 </div>
 
----
+<!-- Animated Line -->
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 [![Character Record](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Character%20Record&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
@@ -51,7 +52,8 @@
 </tr>
 </table>
 
----
+<!-- Animated Line -->
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 [![Tech Arsenal](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Tech%20Arsenal&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
@@ -83,7 +85,8 @@
 ![After Effects](https://img.shields.io/badge/After_Effects-0d0221?style=for-the-badge&logo=adobeaftereffects&logoColor=7b2fff)
 ![Premiere Pro](https://img.shields.io/badge/Premiere_Pro-0d0221?style=for-the-badge&logo=adobepremierepro&logoColor=00d4ff)
 
----
+<!-- Animated Line -->
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 [![Signal Channels](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Signal%20Channels&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
@@ -100,7 +103,8 @@
 
 </div>
 
----
+<!-- Animated Line -->
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 [![Field Report](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Field%20Report&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
@@ -114,7 +118,8 @@
 
 </div>
 
----
+<!-- Animated Line -->
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif" width="100%">
 
 <div align="center">
 
