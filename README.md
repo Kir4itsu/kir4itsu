@@ -9,9 +9,7 @@
 
 <br>
 
-<p><code>╔══════════════════════════════════════════════════════════════╗</code></p>
-<p><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> You Can Call Me: Kira <<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║</code></p>
-<p><code>╚══════════════════════════════════════════════════════════════╝</code></p>
+![Kira Box](./assets/kira-box.svg)
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00d4ff&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)](https://github.com/Kir4itsu)
 
