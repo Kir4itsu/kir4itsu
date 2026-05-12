@@ -4,14 +4,16 @@
 
 <div align="center">
 
-<p align="center"><code>╔══════════════════════════════════════════════════════════════╗</code></p>
-<p align="center"><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> You Can Call Me: Kira <<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║</code></p>
-<p align="center"><code>╚══════════════════════════════════════════════════════════════╝</code></p>
+<!-- ══ HEADER ══ -->
+[![Header](https://capsule-render.vercel.app/api?type=soft&color=0:0d0221,50:00d4ff,100:7b2fff&height=220&section=header&text=Kiraitsu%20Mochizuki&fontSize=50&fontColor=ffffff&animation=fadeIn&fontAlignY=35&desc=Chaos%20Game%20Dev%20%7C%20Full-Stack%20%7C%20Builder%20of%20Broken%20Things&descSize=17&descAlignY=58&descAlign=50)](https://github.com/Kir4itsu)
 
-# `< Kiraitsu Mochizuki />`
-### `// Chaos Game Dev`
+<br>
 
-![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=C724B1&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)
+<p><code>╔══════════════════════════════════════════════════════════════╗</code></p>
+<p><code>║&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;>> You Can Call Me: Kira <<&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;║</code></p>
+<p><code>╚══════════════════════════════════════════════════════════════╝</code></p>
+
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Share+Tech+Mono&size=16&pause=1000&color=00d4ff&center=true&vCenter=true&width=500&lines=Building+chaos+one+commit+at+a+time...;Full-Stack+%7C+Mobile+%7C+Backend+%7C+DevOps;Hardcore+Gamer+And+Make+Game+Too+%F0%9F%9A%80)](https://github.com/Kir4itsu)
 
 </div>
 
@@ -23,15 +25,15 @@
 <tr>
 <td>
 
-| Field            | Details                                         |
-|------------------|-------------------------------------------------|
-| **Designation**  | Kiraitsu Mochizuki                              |
-| **Origin**       | 📍 Indonesia                                    |
-| **First Contact**| December 16, 2020                               |
-| **Clearance**    | ⚡ Level <!-- LEVEL_START -->20<!-- LEVEL_END --> |
-| **Archetype**    | 🔥 Chaos Game Dev                               |
-| **GitHub**       | [Kir4itsu](https://github.com/Kir4itsu)         |
-| **Dispatch**     | kir4itsu@gmail.com                              |
+| Field            | Details                                                      |
+|------------------|--------------------------------------------------------------|
+| **Designation**  | Kiraitsu Mochizuki                                           |
+| **Origin**       | 📍 Indonesia                                                 |
+| **First Contact**| December 16, 2020                                            |
+| **Clearance**    | ⚡ Level <!-- LEVEL_START -->20<!-- LEVEL_END -->             |
+| **Archetype**    | 🔥 Chaos Game Dev                                            |
+| **GitHub**       | [Kir4itsu](https://github.com/Kir4itsu)                     |
+| **Dispatch**     | kir4itsu@gmail.com                                           |
 
 </td>
 <td>
@@ -41,7 +43,7 @@
 | **Code Hit Points** | 40/100    | `███████░░░░░░░░░░░░` 40%         |
 | **Debug Mana**      | 50/100    | `██████████░░░░░░░░░` 50%         |
 | **Experience**      | 30,000 XP | `███████░░░░░░░░░░░░` 37%         |
-| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=C724B1&style=flat-square) |
+| **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
 | **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3AKir4itsu%2Btype%3Apr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
 | **Bugs Fixed**      | 20        | ![](https://img.shields.io/badge/Bugs_Fixed-20-0088ff?style=flat-square)  |
 | **Lines of Code**   | 22,450    | ![](https://img.shields.io/badge/LOC-22%2C450-00d4ff?style=flat-square)  |
@@ -57,23 +59,23 @@
 **— Code —**
 
 ![C++](https://img.shields.io/badge/C++-0d0221?style=for-the-badge&logo=cplusplus&logoColor=00d4ff)
-![C](https://img.shields.io/badge/C-0d0221?style=for-the-badge&logo=c&logoColor=C724B1)
-![C#](https://img.shields.io/badge/C%23-0d0221?style=for-the-badge&logo=csharp&logoColor=7b2fff)
-![Java](https://img.shields.io/badge/Java-0d0221?style=for-the-badge&logo=openjdk&logoColor=00d4ff)
-![Python](https://img.shields.io/badge/Python-0d0221?style=for-the-badge&logo=python&logoColor=C724B1)
-![JavaScript](https://img.shields.io/badge/JavaScript-0d0221?style=for-the-badge&logo=javascript&logoColor=00d4ff)
-![HTML5](https://img.shields.io/badge/HTML5-0d0221?style=for-the-badge&logo=html5&logoColor=7b2fff)
-![CSS3](https://img.shields.io/badge/CSS3-0d0221?style=for-the-badge&logo=css3&logoColor=C724B1)
+![C](https://img.shields.io/badge/C-0d0221?style=for-the-badge&logo=c&logoColor=7b2fff)
+![C#](https://img.shields.io/badge/C%23-0d0221?style=for-the-badge&logo=csharp&logoColor=00d4ff)
+![Java](https://img.shields.io/badge/Java-0d0221?style=for-the-badge&logo=openjdk&logoColor=7b2fff)
+![Python](https://img.shields.io/badge/Python-0d0221?style=for-the-badge&logo=python&logoColor=00d4ff)
+![JavaScript](https://img.shields.io/badge/JavaScript-0d0221?style=for-the-badge&logo=javascript&logoColor=7b2fff)
+![HTML5](https://img.shields.io/badge/HTML5-0d0221?style=for-the-badge&logo=html5&logoColor=00d4ff)
+![CSS3](https://img.shields.io/badge/CSS3-0d0221?style=for-the-badge&logo=css3&logoColor=7b2fff)
 ![PHP](https://img.shields.io/badge/PHP-0d0221?style=for-the-badge&logo=php&logoColor=00d4ff)
 ![Flutter](https://img.shields.io/badge/Flutter-0d0221?style=for-the-badge&logo=flutter&logoColor=7b2fff)
 ![React](https://img.shields.io/badge/React-0d0221?style=for-the-badge&logo=react&logoColor=00d4ff)
-![Node.js](https://img.shields.io/badge/Node.js-0d0221?style=for-the-badge&logo=nodedotjs&logoColor=C724B1)
+![Node.js](https://img.shields.io/badge/Node.js-0d0221?style=for-the-badge&logo=nodedotjs&logoColor=7b2fff)
 ![Docker](https://img.shields.io/badge/Docker-0d0221?style=for-the-badge&logo=docker&logoColor=00d4ff)
 ![Git](https://img.shields.io/badge/Git-0d0221?style=for-the-badge&logo=git&logoColor=7b2fff)
 
 **— Creative —**
 
-![Photoshop](https://img.shields.io/badge/Photoshop-0d0221?style=for-the-badge&logo=adobephotoshop&logoColor=C724B1)
+![Photoshop](https://img.shields.io/badge/Photoshop-0d0221?style=for-the-badge&logo=adobephotoshop&logoColor=00d4ff)
 ![After Effects](https://img.shields.io/badge/After_Effects-0d0221?style=for-the-badge&logo=adobeaftereffects&logoColor=7b2fff)
 ![Premiere Pro](https://img.shields.io/badge/Premiere_Pro-0d0221?style=for-the-badge&logo=adobepremierepro&logoColor=00d4ff)
 
@@ -81,14 +83,18 @@
 
 ## ◈ Signal Channels
 
+<div align="center">
+
 [![GitHub](https://img.shields.io/badge/GitHub-0d0221?style=for-the-badge&logo=github&logoColor=00d4ff)](https://github.com/Kir4itsu)
-[![Steam](https://img.shields.io/badge/Steam-0d0221?style=for-the-badge&logo=steam&logoColor=C724B1)](https://steamcommunity.com/id/Kir4itsu/)
-[![Epic Games](https://img.shields.io/badge/Epic_Games-0d0221?style=for-the-badge&logo=epicgames&logoColor=7b2fff)](https://www.epicgames.com/id/Kir4itsu)
-[![Discord](https://img.shields.io/badge/Discord-0d0221?style=for-the-badge&logo=discord&logoColor=00d4ff)](https://discord.com/users/775314296661213194)
-[![TikTok](https://img.shields.io/badge/TikTok-0d0221?style=for-the-badge&logo=tiktok&logoColor=C724B1)](https://www.tiktok.com/@kiraitsu)
+[![Steam](https://img.shields.io/badge/Steam-0d0221?style=for-the-badge&logo=steam&logoColor=7b2fff)](https://steamcommunity.com/id/Kir4itsu/)
+[![Epic Games](https://img.shields.io/badge/Epic_Games-0d0221?style=for-the-badge&logo=epicgames&logoColor=00d4ff)](https://www.epicgames.com/id/Kir4itsu)
+[![Discord](https://img.shields.io/badge/Discord-0d0221?style=for-the-badge&logo=discord&logoColor=7b2fff)](https://discord.com/users/775314296661213194)
+[![TikTok](https://img.shields.io/badge/TikTok-0d0221?style=for-the-badge&logo=tiktok&logoColor=00d4ff)](https://www.tiktok.com/@kiraitsu)
 [![Spotify](https://img.shields.io/badge/Spotify-0d0221?style=for-the-badge&logo=spotify&logoColor=1db954)](https://open.spotify.com/user/Kiraitsu)
 [![Instagram](https://img.shields.io/badge/Instagram-0d0221?style=for-the-badge&logo=instagram&logoColor=7b2fff)](https://www.instagram.com/kir4itsu/)
 [![Facebook](https://img.shields.io/badge/Facebook-0d0221?style=for-the-badge&logo=facebook&logoColor=00d4ff)](https://www.facebook.com/Kir1170)
+
+</div>
 
 ---
 
@@ -96,11 +102,11 @@
 
 <div align="center">
 
-![Kiraitsu's GitHub Stats](https://github-readme-stats-salesp07.vercel.app/api?username=Kir4itsu&show_icons=true&count_private=true&theme=tokyonight&border_color=7b2fff&bg_color=0d0221&title_color=C724B1&icon_color=7b2fff&text_color=00d4ff&hide_border=false)
+![Kiraitsu's GitHub Stats](https://github-readme-stats-salesp07.vercel.app/api?username=Kir4itsu&show_icons=true&count_private=true&theme=tokyonight&border_color=00d4ff&bg_color=0d0221&title_color=00d4ff&icon_color=7b2fff&text_color=ffffff&hide_border=false)
 
-![Top Languages](https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=tokyonight&border_color=7b2fff&bg_color=0d0221&title_color=C724B1&text_color=00d4ff&count_private=true&langs_count=8)
+![Top Languages](https://github-readme-stats-salesp07.vercel.app/api/top-langs/?username=Kir4itsu&layout=compact&theme=tokyonight&border_color=00d4ff&bg_color=0d0221&title_color=00d4ff&text_color=ffffff&count_private=true&langs_count=8)
 
-![GitHub Streak](https://streak-stats.demolab.com?user=Kir4itsu&theme=tokyonight&border=7b2fff&background=0d0221&stroke=C724B1&ring=7b2fff&fire=00d4ff&currStreakLabel=C724B1)
+![GitHub Streak](https://streak-stats.demolab.com?user=Kir4itsu&theme=tokyonight&border=00d4ff&background=0d0221&stroke=7b2fff&ring=00d4ff&fire=7b2fff&currStreakLabel=00d4ff)
 
 </div>
 
@@ -108,11 +114,14 @@
 
 <div align="center">
 
-<p align="center"><code>╔══════════════════════════════════════════════════════════╗</code></p>
-<p align="center"><code>&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
-<p align="center"><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
-<p align="center"><code>╚══════════════════════════════════════════════════════════╝</code></p>
+<p><code>╔══════════════════════════════════════════════════════════╗</code></p>
+<p><code>&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
+<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
+<p><code>╚══════════════════════════════════════════════════════════╝</code></p>
 
-![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=C724B1&style=flat-square&label=PROFILE+VIEWS)
+<!-- ══ FOOTER ══ -->
+[![Footer](https://capsule-render.vercel.app/api?type=soft&color=0:7b2fff,50:00d4ff,100:0d0221&height=120&section=footer&animation=fadeIn)](https://github.com/Kir4itsu)
+
+![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=00d4ff&style=flat-square&label=PROFILE+VIEWS)
 
 </div>
