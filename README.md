@@ -19,7 +19,7 @@
 
 ---
 
-## ◈ Character Record
+[![Character Record](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Character%20Record&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
 <table>
 <tr>
@@ -54,7 +54,7 @@
 
 ---
 
-## ◈ Tech Arsenal
+[![Tech Arsenal](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Tech%20Arsenal&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
 **— Code —**
 
@@ -86,7 +86,7 @@
 
 ---
 
-## ◈ Signal Channels
+[![Signal Channels](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Signal%20Channels&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
 <div align="center">
 
@@ -103,7 +103,7 @@
 
 ---
 
-## ◈ Field Report
+[![Field Report](https://capsule-render.vercel.app/api?type=rect&color=0:00d4ff,100:C724B1&height=40&text=◈%20Field%20Report&fontSize=18&fontColor=ffffff&fontAlignY=65)](https://github.com/Kir4itsu)
 
 <div align="center">
 
@@ -119,13 +119,8 @@
 
 <div align="center">
 
-<p><code>╔══════════════════════════════════════════════════════════╗</code></p>
-<p><code>&nbsp;&nbsp;"First, solve the problem. Then, write the code."&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</code></p>
-<p><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;— Chaos Mode&nbsp;&nbsp;</code></p>
-<p><code>╚══════════════════════════════════════════════════════════╝</code></p>
-
 <!-- ══ FOOTER ══ -->
-[![Footer](https://capsule-render.vercel.app/api?type=soft&color=0:C724B1,100:00d4ff&height=120&section=footer&animation=fadeIn)](https://github.com/Kir4itsu)
+[![Footer](https://capsule-render.vercel.app/api?type=soft&color=0:C724B1,100:00d4ff&height=160&section=footer&text=%22First%2C%20solve%20the%20problem.%20Then%2C%20write%20the%20code.%22&fontSize=18&fontColor=ffffff&fontAlignY=45&animation=fadeIn&desc=―%20Chaos%20Mode&descSize=14&descAlignY=68&descAlign=50)](https://github.com/Kir4itsu)
 
 ![Profile Views](https://komarev.com/ghpvc/?username=Kir4itsu&color=00d4ff&style=flat-square&label=PROFILE+VIEWS)
 
