@@ -29,7 +29,7 @@
 | **Designation**  | Kiraitsu Mochizuki                                           |
 | **Origin**       | 📍 Indonesia                                                 |
 | **First Contact**| December 16, 2020                                            |
-| **Clearance**    | ⚡ Level <!-- LEVEL_START -->20<!-- LEVEL_END -->             |
+| **Clearance**    | ⚡ Level <!-- LEVEL_START -->21<!-- LEVEL_END -->             |
 | **Archetype**    | 🔥 Chaos Game Dev                                            |
 | **GitHub**       | [Kir4itsu](https://github.com/Kir4itsu)                     |
 | **Dispatch**     | kir4itsu@gmail.com                                           |
