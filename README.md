@@ -39,9 +39,9 @@
 
 | Stat                | Value     | Progress                          |
 |---------------------|-----------|-----------------------------------|
-| **Games Owned**     | <!-- GAMES_START -->563<!-- GAMES_END --> | ![](https://img.shields.io/badge/Steam_Games-563-0d0221?style=flat-square&logo=steam&logoColor=00d4ff) |
-| **Perfect Games**   | <!-- PERFECT_START -->51<!-- PERFECT_END --> / <!-- GAMES_START -->563<!-- GAMES_END --> | ![](https://img.shields.io/badge/Perfect_Games-51-0d0221?style=flat-square&logo=steam&logoColor=C724B1) |
-| **Achievements**    | <!-- ACHIEVEMENTS_START -->15745<!-- ACHIEVEMENTS_END --> | ![](https://img.shields.io/badge/Achievements-15745-0d0221?style=flat-square&logo=steam&logoColor=7b2fff) |
+| **Games Owned**     | <!-- GAMES_START -->569<!-- GAMES_END --> | ![](https://img.shields.io/badge/Steam_Games-569-0d0221?style=flat-square&logo=steam&logoColor=00d4ff) |
+| **Perfect Games**   | <!-- PERFECT_START -->51<!-- PERFECT_END --> / <!-- GAMES_START -->569<!-- GAMES_END --> | ![](https://img.shields.io/badge/Perfect_Games-51-0d0221?style=flat-square&logo=steam&logoColor=C724B1) |
+| **Achievements**    | <!-- ACHIEVEMENTS_START -->15751<!-- ACHIEVEMENTS_END --> | ![](https://img.shields.io/badge/Achievements-15751-0d0221?style=flat-square&logo=steam&logoColor=7b2fff) |
 | **Sleep Lost to Code** | ∞ hrs  | `████████████████████` 100%       |
 | **Commits**         | —         | ![commits](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fcommits%3Fq%3Dauthor%3AKir4itsu&query=$.total_count&label=Commits&color=00d4ff&style=flat-square) |
 | **Pull Requests**   | —         | ![prs](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Fsearch%2Fissues%3Fq%3Dauthor%3AKir4itsu%2Btype%3Apr&query=$.total_count&label=PRs&color=7b2fff&style=flat-square) |
