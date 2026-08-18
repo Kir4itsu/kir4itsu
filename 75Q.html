@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Alat Bantu Sidang — Widy FSM (75 Pertanyaan)</title>
+    <title>Alat Bantu Sidang — Widy FSM (81 Pertanyaan)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <style>
@@ -257,13 +257,13 @@
     <div class="container">
         <div class="header">
             <h1>🛡️ Alat Bantu Sidang — <span>Widy FSM</span></h1>
-            <div class="sub">75 pertanyaan & jawaban siap pakai — gaya santai tapi berbobot</div>
-            <div class="badge-session">📌 75 Pertanyaan · 6 Kategori</div>
+            <div class="sub">81 pertanyaan & jawaban siap pakai — termasuk data mentah & riwayat ide</div>
+            <div class="badge-session">📌 81 Pertanyaan · 6 Kategori</div>
         </div>
 
         <div class="search-section">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Cari kata kunci… (contoh: response time, responden, sus)" />
+                <input type="text" id="searchInput" placeholder="Cari kata kunci… (contoh: response time, responden, sus, gamifikasi)" />
                 <div class="filter-group" id="filterGroup">
                     <button class="filter-btn active" data-filter="all">Semua</button>
                     <button class="filter-btn" data-filter="latar">Latar Belakang</button>
@@ -282,7 +282,7 @@
 
     <script>
         // ============================================================
-        //  DATABASE PERTANYAAN (75 Pertanyaan — Versi Santai)
+        //  DATABASE PERTANYAAN (81 Pertanyaan — Versi Santai)
         // ============================================================
         const questions = [{
             id: 1,
@@ -734,6 +734,42 @@
             question: 'Pesan utama apa yang ingin disampaikan kepada audiens tentang potensi FSM di luar game?',
             answer: 'FSM itu nggak cuma buat game. Bisa dipake di simulasi, robotika, sistem kontrol, dan aplikasi interaktif lainnya. Yang penting adalah kita bisa memodelkan perilaku jadi state-state yang jelas. Penelitian ini buktiin FSM efektif di NPC pemandu untuk simulasi kampus.',
             tags: ['potensi', 'FSM', 'luar game', 'simulasi', 'robotika']
+        }, {
+            id: 76,
+            category: 'pengujian',
+            question: 'Di data mentah FSM, kenapa ada response time 0 ms padahal skenario lainnya sampai ribuan ms?',
+            answer: 'Jadi gini, Pak/Bu. 0 ms itu terjadi di skenario CatchUp karena state NPC-nya sudah CatchUp sejak awal tes (cek kolom "State Awal"). Karena nggak ada perubahan state (transisi), response time tercatat 0 ms. Ini justru bukti kalau logika transisinya itu instan—cuma butuh hitungan milidetik buat evaluasi if-else-nya. Yang makan waktu lama itu adalah proses gerak fisik di NavMesh, bukan logika FSM-nya.',
+            tags: ['0 ms', 'CatchUp', 'state awal', 'instan', 'data mentah', 'CSV']
+        }, {
+            id: 77,
+            category: 'pengujian',
+            question: 'Di data mentah FSM, kenapa transisi ke Follow (2199 ms) dan StopSudden (1618 ms) response time-nya besar?',
+            answer: 'Kalau saya jelasin berdasarkan data mentah yang ada, Pak/Bu. Di skenario Follow, NPC harus menempuh jarak fisik sekitar 8 meter buat mencapai pemain (lihat kolom Jarak yang nilainya 8.0-8.3 meter). 2199 ms itu adalah waktu tempuh NavMeshAgent. Sementara di StopSudden, NPC harus berhenti total dari kecepatan lari (sprint) ke 0. NavMeshAgent punya inersia, makanya butuh waktu sekitar 1.6 detik buat melambat. Jadi ini semua tentang proses fisik, bukan lemotnya kode.',
+            tags: ['2199 ms', '1618 ms', 'Follow', 'StopSudden', 'jarak', 'NavMeshAgent']
+        }, {
+            id: 78,
+            category: 'pengujian',
+            question: 'Di data mentah FSM (Waiting), kenapa ada response time 2980 ms padahal rata-rata Waiting 281 ms?',
+            answer: 'Nah, ini menarik, Pak/Bu. Kalau lihat data mentah, di 18 trial pertama Waiting, NPC masih sangat jauh (jarak 70-an meter) jadi state-nya tetap Waiting dan response time 0 ms. Tapi di trial 19 dan 20, NPC sudah mulai mendekat (jarak sekitar 6 meter). Saat itu terjadi transisi dari CatchUp ke Waiting, makanya response time-nya ~2.8 detik. Itu adalah waktu yang dibutuhkan NPC untuk benar-benar berhenti total dari kecepatan lari. Jadi angka 2980 ms itu masuk akal karena ada proses perlambatan fisik.',
+            tags: ['2980 ms', 'Waiting', 'jarak jauh', 'perlambatan', 'transisi']
+        }, {
+            id: 79,
+            category: 'pengujian',
+            question: 'Di data NavMesh (RM2), kenapa ada PathStuck 2 kali? Apakah NavMesh gagal?',
+            answer: 'Nggak juga, Pak/Bu. Kalau saya lihat di data mentah, PathStuck terjadi di area LabKom Elektro dan satu entri kosong. Keduanya adalah ruangan tertutup berpintu. Di area terbuka (Kantin, Gazebo, Teras Masjid, Lorong) saya catat 0 kejadian PathStuck. Jadi PathStuck itu terjadi karena NPC berhenti di depan pintu dan nggak bisa masuk—sesuai dengan batasan penelitian saya. Bukan karena NavMesh-nya gagal. Di area terbuka yang sah, success rate-nya 100%.',
+            tags: ['PathStuck', 'LabKom Elektro', 'pintu', 'area terbuka', 'success rate']
+        }, {
+            id: 80,
+            category: 'pengujian',
+            question: 'Di data NavMesh (RM2), kenapa waktu tempuh (TravelTime) ada yang 0.16 detik dan ada yang 28.55 detik?',
+            answer: 'Ini tergantung jarak awal antara NPC dan pemain, Pak/Bu. Saya catat waktu tempuh dari posisi awal NPC ke posisi pemain di area terbuka. Kalau NPC lagi deket (misal di Lorong dan pemain di sebelahnya), ya cepet banget cuma 0.16 detik. Tapi kalau NPC lagi jauh banget di ujung parkir dan pemain di sisi lain, ya bisa sampai 28 detik. Rata-ratanya saya hitung 10.16 detik, sesuai yang saya tulis di Tabel 4.4. Variasi ini wajar karena posisi awal NPC nggak selalu sama.',
+            tags: ['TravelTime', '0.16', '28.55', 'jarak', 'rata-rata', '10.16']
+        }, {
+            id: 81,
+            category: 'latar',
+            question: 'Kenapa dari awal bikin NPC pemandu kayak gini? Awalnya kan ada gamifikasi, kenapa berubah jadi FSM?',
+            answer: 'Jadi gini, Pak/Bu. Sebenernya dari awal saya emang udah kepikiran buat bikin NPC pemandu yang bisa ngikutin pemain, karena saya lihat sendiri teman-teman saya waktu baru masuk kampus suka bingung cari ruangan. Tapi dulu saya belum tau kalau metode yang saya butuhkan itu namanya FSM. Awalnya saya pengen bikin gamifikasi—kayak ada misi, poin, atau achievement gitu biar seru. Tapi makin saya dalemin, saya sadar kalau gamifikasi itu lebih ke "hadiah" dan "tantangan", sedangkan yang saya butuhin adalah perilaku NPC yang natural—yang bisa nunggu, ngikut, atau ngejar pemain. Saya juga mikir, kalau saya paksain gamifikasi, aplikasi ini malah jadi kayak game dan tujuan utamanya—yaitu orientasi kampus—jadi kurang fokus. Akhirnya saya putusin buat hapus elemen gamifikasi dan ganti dengan pendekatan yang lebih teknis. Pas saya cari-cari referensi, saya nemu FSM. Dan ternyata FSM itu cocok banget sama yang saya bayangkan: NPC bisa punya state Waiting, Follow, dan Catch Up. Jadi keputusan ini bukan karena gamifikasi-nya jelek, tapi karena FSM lebih tepat sasaran buat kebutuhan penelitian saya.',
+            tags: ['gamifikasi', 'ide awal', 'alasan', 'FSM', 'perilaku natural', 'orientasi kampus', 'perubahan']
         }];
 
         // ============================================================
@@ -780,7 +816,7 @@
                     <div class="empty">
                         <div class="icon">🔍</div>
                         <p>Tidak ditemukan hasil untuk <b>"${searchInput.value}"</b></p>
-                        <p style="font-size:0.8rem; margin-top:0.3rem;">Coba kata kunci lain, misal: <i>response time, sus, navmesh, fsm</i></p>
+                        <p style="font-size:0.8rem; margin-top:0.3rem;">Coba kata kunci lain, misal: <i>response time, sus, navmesh, fsm, gamifikasi</i></p>
                     </div>
                 `;
                 return;
