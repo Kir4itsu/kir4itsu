@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seminar Hasil Skripsi — Widy FSM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        :root {
+            --bg-start: #0b0e1e;
+            --bg-end: #14182b;
+            --gradient-top: #1a1f3a;
+            --gradient-bottom: #0f1225;
+            --accent: #6c8cff;
+            --accent-glow: rgba(108, 140, 255, 0.15);
+            --text: #f0f4ff;
+            --text-dim: #8a9bb5;
+            --text-white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --fsm-waiting: #4ade80;
+            --fsm-follow: #60a5fa;
+            --fsm-catchup: #fb923c;
+        }
+        body {
+            background: var(--bg-start);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .stage {
+            position: relative;
+            width: min(96vw, 177.7vh);
+            aspect-ratio: 16 / 9;
+            background: radial-gradient(ellipse at 70% 20%, #1a224a 0%, var(--bg-start) 60%);
+            border-radius: 4px;
+            box-shadow: 0 60px 160px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+        }
+        .stage::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -20%;
+            width: 70%;
+            height: 80%;
+            background: radial-gradient(ellipse, rgba(108, 140, 255, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .stage::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(ellipse, rgba(108, 140, 255, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .slide {
+            position: absolute;
+            inset: 0;
+            padding: 5% 7%;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            z-index: 1;
+        }
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+            z-index: 2;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            border: 1px solid rgba(108, 140, 255, 0.2);
+            padding: 0.3em 1em;
+            width: fit-content;
+            background: rgba(108, 140, 255, 0.06);
+            border-radius: 20px;
+        }
+        .tag::before {
+            content: '◆';
+            font-size: 0.6em;
+            opacity: 0.6;
+        }
+
+        .kicker {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 0.4em;
+        }
+
+        h1 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 2.2rem;
+            line-height: 1.12;
+            letter-spacing: -0.02em;
+            margin: 0.2em 0 0.4em;
+            max-width: 22ch;
+            color: var(--text-white);
+        }
+        h1 .accent {
+            color: var(--accent);
+        }
+        h1 .highlight {
+            color: #fbbf24;
+        }
+
+        p.lead {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            max-width: 52ch;
+            line-height: 1.6;
+        }
+
+        .body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 0;
+            gap: 0.6em;
+            position: relative;
+            z-index: 1;
+        }
+
+        ul.points {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+        }
+        ul.points li {
+            display: flex;
+            gap: 0.6em;
+            align-items: flex-start;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+        ul.points li::before {
+            content: '▸';
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0.1em;
+            flex-shrink: 0;
+        }
+        ul.points li b {
+            color: var(--text-white);
+            font-weight: 600;
+        }
+        ul.points.tight li {
+            font-size: 0.82rem;
+            gap: 0.5em;
+        }
+        ul.points.small li {
+            font-size: 0.75rem;
+            gap: 0.4em;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8em;
+            flex: 1;
+            align-items: center;
+        }
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1em;
+        }
+        .grid4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8em;
+        }
+        .grid5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.6em;
+        }
+        .grid6 {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 0.5em;
+        }
+        .grid2-rows {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 0.6em;
+        }
+
+        .panel {
+            border: 1px solid var(--card-border);
+            background: var(--card-bg);
+            padding: 1em 1.2em;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+        }
+        .panel h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.4em;
+        }
+        .panel.revision {
+            border-color: #fbbf24;
+            background: rgba(251, 191, 36, 0.05);
+        }
+        .panel.revision h3 {
+            color: #fbbf24;
+        }
+        .panel.defense {
+            border-color: #a78bfa;
+            background: rgba(167, 139, 250, 0.05);
+        }
+        .panel.defense h3 {
+            color: #a78bfa;
+        }
+        .panel.code {
+            border-color: #60a5fa;
+            background: rgba(96, 165, 250, 0.05);
+        }
+        .panel.code h3 {
+            color: #60a5fa;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1em;
+            border-left: 2px solid var(--accent);
+            padding-left: 0.7em;
+        }
+        .stat .num {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--text-white);
+            line-height: 1;
+        }
+        .stat .lbl {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            line-height: 1.35;
+            margin-top: 0.2em;
+        }
+        .stat.amber {
+            border-color: #fbbf24;
+        }
+        .stat.amber .num {
+            color: #fbbf24;
+        }
+        .stat.green {
+            border-color: #4ade80;
+        }
+        .stat.green .num {
+            color: #4ade80;
+        }
+        .stat.blue {
+            border-color: var(--accent);
+        }
+        .stat.blue .num {
+            color: var(--accent);
+        }
+        .stat.purple {
+            border-color: #a78bfa;
+        }
+        .stat.purple .num {
+            color: #a78bfa;
+        }
+        .stat.orange {
+            border-color: #fb923c;
+        }
+        .stat.orange .num {
+            color: #fb923c;
+        }
+        .stat.red {
+            border-color: #f87171;
+        }
+        .stat.red .num {
+            color: #f87171;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            max-height: 36vh;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.72rem;
+        }
+        th,
+        td {
+            text-align: left;
+            padding: 0.35em 0.5em;
+            border-bottom: 1px solid var(--card-border);
+        }
+        th {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.55rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 500;
+        }
+        td.mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .fsm-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6em;
+            flex-wrap: wrap;
+        }
+        .fsm-node {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-align: center;
+            border: 1.5px solid;
+            border-radius: 10px;
+            padding: 0.7em 1.2em;
+            min-width: 7.5em;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .fsm-node .st {
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            font-size: 0.85rem;
+        }
+        .fsm-node .cond {
+            color: var(--text-dim);
+            font-size: 0.6rem;
+            margin-top: 0.2em;
+        }
+        .fsm-node .speed {
+            font-size: 0.55rem;
+            margin-top: 0.1em;
+        }
+        .fsm-node.waiting {
+            border-color: var(--fsm-waiting);
+            color: var(--fsm-waiting);
+        }
+        .fsm-node.follow {
+            border-color: var(--fsm-follow);
+            color: var(--fsm-follow);
+        }
+        .fsm-node.catchup {
+            border-color: var(--fsm-catchup);
+            color: var(--fsm-catchup);
+        }
+        .fsm-arrow {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .cols {
+            display: flex;
+            gap: 2em;
+            flex: 1;
+            align-items: center;
+        }
+        .col {
+            flex: 1;
+        }
+        .small {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: var(--card-border);
+            margin: 0.7em 0;
+        }
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .badge-row {
+            display: flex;
+            gap: 0.4em;
+            flex-wrap: wrap;
+            margin-top: 0.4em;
+        }
+        .badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.58rem;
+            letter-spacing: 0.05em;
+            border: 1px solid var(--card-border);
+            padding: 0.2em 0.7em;
+            color: var(--text-dim);
+            border-radius: 12px;
+        }
+        .badge.green {
+            border-color: #4ade80;
+            color: #4ade80;
+        }
+        .badge.amber {
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+        .badge.cyan {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .vs-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5em;
+            justify-content: center;
+        }
+        .vs-box {
+            flex: 1;
+            padding: 0.8em 1em;
+            border-radius: 10px;
+        }
+        .vs-box.before {
+            border: 1px solid #f87171;
+            background: rgba(248, 113, 113, 0.05);
+        }
+        .vs-box.before h4 {
+            color: #f87171;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .vs-box.after {
+            border: 1px solid #4ade80;
+            background: rgba(74, 222, 128, 0.05);
+        }
+        .vs-box.after h4 {
+            color: #4ade80;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .vs-arrow {
+            font-size: 2rem;
+            color: var(--text-dim);
+        }
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            color: var(--text-dim);
+            padding-top: 0.8em;
+            margin-top: auto;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+        .footer .progress {
+            flex: 1;
+            height: 2px;
+            background: var(--card-border);
+            margin: 0 1.2em;
+            position: relative;
+            overflow: hidden;
+            border-radius: 2px;
+        }
+        .footer .progress i {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            background: var(--accent);
+            width: 5%;
+            transition: width 0.4s ease;
+            border-radius: 2px;
+        }
+
+        .nav-btn {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1rem;
+            z-index: 100;
+            user-select: none;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .nav-btn:hover {
+            background: rgba(108, 140, 255, 0.12);
+            border-color: var(--accent);
+        }
+        #prev {
+            left: 1.2vw;
+        }
+        #next {
+            right: 1.2vw;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+                gap: 1em;
+            }
+            .grid3,
+            .grid4,
+            .grid5,
+            .grid6 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .cols {
+                flex-direction: column;
+                gap: 1em;
+            }
+            h1 {
+                font-size: 1.6rem;
+            }
+            .fsm-diagram {
+                gap: 0.3em;
+            }
+            .fsm-node {
+                min-width: 5em;
+                padding: 0.5em 0.8em;
+                font-size: 0.65rem;
+            }
+            .fsm-arrow {
+                font-size: 0.8rem;
+            }
+            .vs-container {
+                flex-direction: column;
+                gap: 0.8em;
+            }
+            .vs-arrow {
+                transform: rotate(90deg);
+            }
+            .stage {
+                width: 100vw;
+                aspect-ratio: auto;
+                min-height: 100vh;
+                border-radius: 0;
+            }
+            .slide {
+                padding: 6% 5%;
+            }
+            .nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+            #prev {
+                left: 0.5vw;
+            }
+            #next {
+                right: 0.5vw;
+            }
+        }
+        @media (max-width: 480px) {
+            .grid3,
+            .grid4,
+            .grid5,
+            .grid6 {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            .stat .num {
+                font-size: 1.4rem;
+            }
+            .table-wrap {
+                max-height: 30vh;
+            }
+            table {
+                font-size: 0.6rem;
+            }
+        }
+
+        .table-wrap::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .table-wrap::-webkit-scrollbar-track {
+            background: var(--card-border);
+            border-radius: 4px;
+        }
+        .table-wrap::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage" id="stage">
+
+        <!-- ==================== SLIDE 1 : COVER ==================== -->
+        <section class="slide active" data-chapter="COVER">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; position:relative; z-index:1;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5em;">
+                    <div>
+                        <div style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.2em; color:var(--accent); text-transform:uppercase; border:1px solid rgba(108,140,255,0.2); padding:0.3em 1em; border-radius:20px; display:inline-block;">
+                            SEMINAR HASIL SKRIPSI
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:0.65rem; color:var(--text-dim); letter-spacing:0.05em;">Universitas Widya Gama Malang</div>
+                        <div style="font-size:0.65rem; color:var(--text-dim);">Fakultas Sains dan Teknologi Informasi</div>
+                    </div>
+                </div>
+
+                <h1 style="font-size:2.8rem; max-width:18ch; margin:0.2em 0 0.3em;">
+                    Implementasi<br>
+                    <span class="accent">Finite State Machine</span><br>
+                    pada NPC Pemandu
+                </h1>
+                <p style="font-size:1.1rem; color:var(--text-dim); max-width:50ch; line-height:1.6; margin-bottom:0.8em;">
+                    dalam <b style="color:var(--text-white);">Mobile Interactive Simulator</b> untuk Pengenalan Lingkungan Kampus Menggunakan Unity Engine
+                </p>
+
+                <div style="display:flex; gap:2em; flex-wrap:wrap; margin-top:0.5em;">
+                    <div>
+                        <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em;">Penyusun</div>
+                        <div style="font-size:1rem; font-weight:600; color:var(--text-white);">Robert Baz Kiyosaki</div>
+                        <div style="font-size:0.8rem; color:var(--text-dim);">NIM 221552018153820</div>
+                    </div>
+                    <div style="border-left:1px solid var(--card-border); padding-left:2em;">
+                        <div style="font-size:0.75rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.06em;">Dosen Pembimbing</div>
+                        <div style="font-size:0.85rem; color:var(--text-white);">Dr. Istiadi, S.T., M.T.</div>
+                        <div style="font-size:0.85rem; color:var(--text-white);">Ir. Fitri Marisa, S.Kom., M.Pd., Ph.D.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:1.8em; display:flex; gap:0.6em; flex-wrap:wrap;">
+                    <div style="border:1px solid var(--card-border); padding:0.3em 1.2em; border-radius:20px; font-size:0.7rem; color:var(--text-dim);">FSM</div>
+                    <div style="border:1px solid var(--card-border); padding:0.3em 1.2em; border-radius:20px; font-size:0.7rem; color:var(--text-dim);">NavMesh</div>
+                    <div style="border:1px solid var(--card-border); padding:0.3em 1.2em; border-radius:20px; font-size:0.7rem; color:var(--text-dim);">Area Trigger</div>
+                    <div style="border:1px solid var(--card-border); padding:0.3em 1.2em; border-radius:20px; font-size:0.7rem; color:var(--text-dim);">Unity Engine</div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>01 / 20</span>
+                <div class="progress"><i style="width:5%;"></i></div>
+                <span>Implementasi FSM pada NPC Pemandu</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 2 : LATAR BELAKANG ==================== -->
+        <section class="slide" data-chapter="LATAR BELAKANG">
+            <div class="kicker">BAB I · PENDAHULUAN</div>
+            <h1>Orientasi kampus konvensional <span class="accent">kurang efektif</span></h1>
+            <div class="body">
+                <div class="grid2">
+                    <ul class="points">
+                        <li>Tur fisik bersifat <b>satu arah</b> — retensi mahasiswa baru terhadap letak &amp; fungsi fasilitas rendah</li>
+                        <li>Peserta dalam jumlah besar → tidak semua mendengar informasi secara optimal</li>
+                        <li>Materi tur tidak sinkron dengan perubahan fisik kampus (gedung baru, renovasi)</li>
+                        <li>Mahasiswa baru dari luar kota berisiko <b>disorientasi</b> sejak hari pertama kuliah</li>
+                    </ul>
+                    <div class="panel">
+                        <h3>Solusi yang Diusulkan</h3>
+                        <p class="small">Simulasi interaktif berbasis mobile dengan NPC pemandu <b style="color:#fff;">Widy</b> yang berperilaku adaptif — dapat diakses kapan saja, di mana saja, dan mudah diperbarui.</p>
+                        <div class="badge-row">
+                            <div class="badge cyan">FSM</div>
+                            <div class="badge cyan">NavMesh</div>
+                            <div class="badge cyan">Area Trigger</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>02 / 20</span>
+                <div class="progress"><i style="width:10%;"></i></div>
+                <span>Latar Belakang</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 3 : RESEARCH GAP ==================== -->
+        <section class="slide" data-chapter="RESEARCH GAP">
+            <div class="kicker">BAB I · BAB II</div>
+            <h1>Penelitian FSM masih <span class="accent">berpusat pada NPC musuh</span></h1>
+            <div class="body">
+                <div class="cols">
+                    <div class="col panel">
+                        <h3>Penelitian Terdahulu</h3>
+                        <ul class="points tight">
+                            <li>Andhika &amp; Alghifari (2025) — FSM untuk musuh game horor</li>
+                            <li>Rohman (2025) — FSM + A* untuk AI musuh game aksi 3D</li>
+                            <li>Taralandu et al. (2025) — HFSM untuk NPC game petualangan 2D</li>
+                            <li>Saputra et al. (2024) — FSM tanpa NavMesh pada NPC dungeon</li>
+                            <li>Amalia et al. (2024) — FSM + NavMesh untuk simulasi lalu lintas</li>
+                        </ul>
+                    </div>
+                    <div class="col panel" style="border-color:var(--accent);">
+                        <h3 style="color:#fff;">Celah &amp; Posisi Penelitian Ini</h3>
+                        <ul class="points tight">
+                            <li>Fokus pada NPC <b>pemandu (companion/guide)</b>, bukan musuh</li>
+                            <li>Konteks <b>simulasi orientasi lingkungan pendidikan</b></li>
+                            <li>Integrasi penuh <b>FSM + NavMesh + Area Trigger</b> pada satu NPC pemandu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>03 / 20</span>
+                <div class="progress"><i style="width:15%;"></i></div>
+                <span>Research Gap</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 4 : RUMUSAN MASALAH, TUJUAN & BATASAN ==================== -->
+        <section class="slide" data-chapter="RUMUSAN MASALAH & TUJUAN">
+            <div class="kicker">BAB I · PENDAHULUAN</div>
+            <h1>Rumusan Masalah &amp; Tujuan</h1>
+            <div class="body">
+                <div class="grid2" style="grid-template-columns:1fr 1fr; align-items:stretch; gap:1.2em;">
+                    <div style="display:flex; flex-direction:column; gap:0.6em;">
+                        <div class="panel"><h3>RM1</h3><p class="small" style="font-size:0.78rem;">Arsitektur FSM (Waiting, Follow, Catch Up)</p></div>
+                        <div class="panel"><h3>RM2</h3><p class="small" style="font-size:0.78rem;">Navigasi otomatis NavMesh</p></div>
+                        <div class="panel"><h3>RM3</h3><p class="small" style="font-size:0.78rem;">Mekanisme Area Trigger pada 21 area</p></div>
+                        <div class="panel"><h3>RM4</h3><p class="small" style="font-size:0.78rem;">Kelayakan usability (SUS) &amp; user experience (UEQ)</p></div>
+                    </div>
+                    <div>
+                        <h3 style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);">Tujuan</h3>
+                        <ul class="points tight">
+                            <li>Merancang &amp; mengimplementasikan arsitektur <b>FSM</b> pada NPC Widy</li>
+                            <li>Mengimplementasikan <b>NavMesh</b> untuk navigasi otomatis</li>
+                            <li>Mengimplementasikan <b>Area Trigger</b> pada 21 area fasilitas</li>
+                            <li>Mengevaluasi kelayakan aplikasi melalui <b>SUS</b> dan <b>UEQ</b></li>
+                        </ul>
+                        <div style="margin-top:0.8em; border-top:1px solid var(--card-border); padding-top:0.8em;">
+                            <h3 style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:#fbbf24;">Batasan</h3>
+                            <ul class="points tight" style="font-size:0.78rem;">
+                                <li>21 area Kampus Tiga · 3 state FSM · NavMesh · Unity 2022.3 LTS · Android 8.0+ · RAM 4GB</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>04 / 20</span>
+                <div class="progress"><i style="width:20%;"></i></div>
+                <span>Rumusan Masalah &amp; Tujuan</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 5 : METODE PENELITIAN (GDLC) ==================== -->
+        <section class="slide" data-chapter="METODE PENELITIAN">
+            <div class="kicker">BAB III · METODE PENELITIAN</div>
+            <h1>Research &amp; Development — <span class="accent">GDLC</span></h1>
+            <div class="body">
+                <div class="grid3" style="grid-template-columns:repeat(6,1fr); gap:0.6em;">
+                    <div class="panel" style="padding:0.8em;"><h3>01</h3><p class="small" style="font-size:0.7rem;">Analisis Kebutuhan &amp; Studi Literatur</p></div>
+                    <div class="panel" style="padding:0.8em;"><h3>02</h3><p class="small" style="font-size:0.7rem;">Perancangan (GDD, arsitektur, storyboard)</p></div>
+                    <div class="panel" style="padding:0.8em;"><h3>03</h3><p class="small" style="font-size:0.7rem;">Pengembangan (Unity, FSM, NavMesh, Trigger)</p></div>
+                    <div class="panel" style="padding:0.8em;"><h3>04</h3><p class="small" style="font-size:0.7rem;">Pengujian (Alpha, Iterative, SUS &amp; UEQ)</p></div>
+                    <div class="panel" style="padding:0.8em; border-color:#fbbf24;"><h3 style="color:#fbbf24;">05</h3><p class="small" style="font-size:0.7rem;">Perbaikan &amp; Iterasi</p></div>
+                    <div class="panel" style="padding:0.8em;"><h3>06</h3><p class="small" style="font-size:0.7rem;">Implementasi &amp; Dokumentasi</p></div>
+                </div>
+                <p class="small" style="margin-top:0.6em;">Mengombinasikan pendekatan <b>kuantitatif</b> (SUS/UEQ) dan <b>kualitatif</b> (observasi &amp; feedback), bersifat iteratif hingga kriteria kelayakan terpenuhi.</p>
+                <div class="badge-row">
+                    <div class="badge cyan">6 Responden</div>
+                    <div class="badge amber">SUS ≥ 68</div>
+                    <div class="badge green">UEQ Positif</div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>05 / 20</span>
+                <div class="progress"><i style="width:25%;"></i></div>
+                <span>Metode Penelitian</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 6 : ARSITEKTUR STATE WIDY ==================== -->
+        <section class="slide" data-chapter="ARSITEKTUR STATE WIDY">
+            <div class="kicker">BAB II · BAB III</div>
+            <h1>Tiga Perilaku Adaptif <span class="accent">NPC Widy</span></h1>
+            <div class="body" style="justify-content:center;">
+                <div class="fsm-diagram">
+                    <div class="fsm-node waiting">
+                        <div class="st">WAITING</div>
+                        <div class="cond">jarak ≤ 2m atau<br>pemain berhenti</div>
+                        <div class="speed" style="color:var(--fsm-waiting);">speed = 0</div>
+                    </div>
+                    <div class="fsm-arrow">⇄</div>
+                    <div class="fsm-node follow">
+                        <div class="st">FOLLOW</div>
+                        <div class="cond">2m &lt; jarak ≤ 5m</div>
+                        <div class="speed" style="color:var(--fsm-follow);">speed = 3.5 u/s</div>
+                    </div>
+                    <div class="fsm-arrow">⇄</div>
+                    <div class="fsm-node catchup">
+                        <div class="st">CATCH UP</div>
+                        <div class="cond">jarak &gt; 5m</div>
+                        <div class="speed" style="color:var(--fsm-catchup);">speed = 7 u/s</div>
+                    </div>
+                </div>
+                <p class="small" style="text-align:center; margin-top:0.8em;">Transisi dievaluasi setiap <i>frame</i> menggunakan <span class="mono">Vector3.Distance()</span> + deteksi kecepatan gerak pemain</p>
+            </div>
+            <div class="footer">
+                <span>06 / 20</span>
+                <div class="progress"><i style="width:30%;"></i></div>
+                <span>Arsitektur State Widy</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 7 : DETAIL IMPLEMENTASI FSM (KODE) ==================== -->
+        <section class="slide" data-chapter="DETAIL IMPLEMENTASI">
+            <div class="kicker">BAB IV · IMPLEMENTASI TEKNIS</div>
+            <h1>Logika Transisi pada <span class="mono" style="color:var(--accent);font-size:0.7em;">Update()</span></h1>
+            <div class="body">
+                <div class="grid2" style="align-items:stretch;">
+                    <div class="panel code" style="font-family:'JetBrains Mono',monospace; font-size:0.7rem; line-height:1.8; color:#c9e8e2; overflow-x:auto;">
+                        <span style="color:#6c8cff;">void</span> Update() {<br>
+                        &nbsp;&nbsp;<span style="color:#8a9bb5;">float</span> distance = Vector3.Distance(<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;transform.position, player.position);<br>
+                        &nbsp;&nbsp;<span style="color:#8a9bb5;">float</span> playerSpeed = player.GetComponent&lt;CharacterController&gt;().velocity.magnitude;<br>
+                        &nbsp;&nbsp;<span style="color:#8a9bb5;">bool</span> playerIsMoving = playerSpeed > 0.3f;<br>
+                        <br>
+                        &nbsp;&nbsp;<span style="color:#8a9bb5;">if</span> (distance <= 2f <span style="color:#8a9bb5;">||</span> !playerIsMoving) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;currentState = State.<span style="color:#4ade80;">Waiting</span>;<br>
+                        &nbsp;&nbsp;} <span style="color:#8a9bb5;">else if</span> (distance <= 5f) {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;currentState = State.<span style="color:#60a5fa;">Follow</span>;<br>
+                        &nbsp;&nbsp;} <span style="color:#8a9bb5;">else</span> {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;currentState = State.<span style="color:#fb923c;">CatchUp</span>;<br>
+                        &nbsp;&nbsp;}<br>
+                        &nbsp;&nbsp;ApplyState(currentState);<br>
+                        }
+                    </div>
+                    <div>
+                        <ul class="points tight">
+                            <li>Skrip <span class="mono">WidyCompanionFollower.cs</span> mengevaluasi jarak Euclidean &amp; kecepatan pemain setiap frame</li>
+                            <li>NavMesh di-<i>bake</i> pada seluruh permukaan lantai yang dapat dilalui</li>
+                            <li>Area Trigger dipasang pada 21 area menggunakan Box Collider (Is Trigger)</li>
+                            <li>Desain dialog bergaya <i>visual novel</i> memperkuat kesan personal saat interaksi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>07 / 20</span>
+                <div class="progress"><i style="width:35%;"></i></div>
+                <span>Detail Implementasi</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 8 : NAVMESH & AREA TRIGGER ==================== -->
+        <section class="slide" data-chapter="NAVMESH & AREA TRIGGER">
+            <div class="kicker">BAB II · TEKNOLOGI PENDUKUNG</div>
+            <h1>NavMesh &amp; Area Trigger</h1>
+            <div class="body">
+                <div class="grid2">
+                    <div class="panel">
+                        <h3 style="color:var(--accent);">NavMesh</h3>
+                        <p class="small">Struktur data permukaan yang dapat dilalui, dibangun melalui proses <i>baking</i>. Komponen <span class="mono">NavMeshAgent</span> menangani pathfinding &amp; steering otomatis menuju posisi pemain.</p>
+                    </div>
+                    <div class="panel">
+                        <h3 style="color:#fb923c;">Area Trigger</h3>
+                        <p class="small"><span class="mono">Box Collider (Is Trigger)</span> ditempatkan pada tiap area. Fungsi <span class="mono">OnTriggerEnter</span> memicu panel informasi lokasi.</p>
+                    </div>
+                </div>
+                <p class="small" style="margin-top:0.6em;">Integrasi FSM ↔ NavMesh: nilai <span class="mono">NavMeshAgent.speed</span> diubah otomatis sesuai status aktif NPC.</p>
+            </div>
+            <div class="footer">
+                <span>08 / 20</span>
+                <div class="progress"><i style="width:40%;"></i></div>
+                <span>NavMesh &amp; Area Trigger</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 9 : REVISI ==================== -->
+        <section class="slide" data-chapter="REVISI">
+            <div class="kicker">⭐ HASIL REVISI · ARGUMEN UTAMA</div>
+            <h1>Sebelum Revisi <span class="highlight">vs</span> Sesudah Revisi</h1>
+            <div class="body">
+                <div class="vs-container">
+                    <div class="vs-box before">
+                        <h4>❌ Sebelum Revisi</h4>
+                        <ul class="points tight" style="font-size:0.78rem;">
+                            <li>Klaim FSM "berhasil" hanya berdasarkan <b>observasi kualitatif</b></li>
+                            <li>Pengujian <b>hanya SUS &amp; UEQ</b> — persepsi pengguna, bukan bukti teknis</li>
+                            <li>Tidak ada data <b>response time</b> atau akurasi transisi state</li>
+                        </ul>
+                    </div>
+                    <div class="vs-arrow">→</div>
+                    <div class="vs-box after">
+                        <h4>✅ Sesudah Revisi</h4>
+                        <ul class="points tight" style="font-size:0.78rem;">
+                            <li>Klaim FSM didukung oleh <b>Black Box Testing</b> dengan data kuantitatif</li>
+                            <li>Pengujian <b>teknis terpisah</b> dari pengujian pengguna (SUS/UEQ)</li>
+                            <li>Data <b>response time</b>, akurasi transisi (100%), dan success rate NavMesh (100%)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="panel revision" style="margin-top:0.5em;">
+                    <h3>📌 Hasil Revisi — Bukti Kuantitatif yang Ditambahkan</h3>
+                    <div class="grid4">
+                        <div class="stat green"><div class="num">100%</div><div class="lbl">Akurasi transisi state FSM (100/100 trial)</div></div>
+                        <div class="stat amber"><div class="num">957,8<span style="font-size:1rem;">ms</span></div><div class="lbl">Rata-rata response time (level perilaku fisik)</div></div>
+                        <div class="stat green"><div class="num">100%</div><div class="lbl">Success rate NavMesh (29/29 trial)</div></div>
+                        <div class="stat green"><div class="num">21/21</div><div class="lbl">Area Trigger lulus seluruh kriteria</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>09 / 20</span>
+                <div class="progress"><i style="width:45%;"></i></div>
+                <span>Hasil Revisi</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 10 : PENGUJIAN FSM ==================== -->
+        <section class="slide" data-chapter="PENGUJIAN FSM">
+            <div class="kicker">BAB IV · BLACK BOX TESTING</div>
+            <h1>Transisi State FSM: <span class="accent">100% Akurat</span></h1>
+            <div class="body">
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>No</th><th>Skenario</th><th>State Diharapkan</th><th>Akurasi</th><th>Response Time</th></tr>
+                        <tr><td>1</td><td>Pemain berhenti, jarak dekat</td><td>Waiting</td><td class="mono" style="color:#4ade80;">100%</td><td class="mono">281,97 ms</td></tr>
+                        <tr><td>2</td><td>Pemain berhenti, jarak jauh</td><td>Waiting</td><td class="mono" style="color:#4ade80;">100%</td><td class="mono">281,97 ms</td></tr>
+                        <tr><td>3</td><td>Pemain jalan normal</td><td>Follow</td><td class="mono" style="color:#4ade80;">100%</td><td class="mono">2199,01 ms</td></tr>
+                        <tr><td>4</td><td>Pemain lari menjauh</td><td>Catch Up</td><td class="mono" style="color:#4ade80;">100%</td><td class="mono">0,00 ms</td></tr>
+                        <tr><td>5</td><td>Pemain berhenti setelah dikejar</td><td>Follow → Waiting</td><td class="mono" style="color:#4ade80;">100%</td><td class="mono">1618,33 ms</td></tr>
+                    </table>
+                </div>
+                <p class="small" style="margin-top:0.4em;">✅ <b>100% akurasi transisi state</b> (100/100 trial) — membuktikan FSM bekerja sesuai rancangan. Response time diukur pada <b>level perilaku fisik</b> (mencakup waktu tempuh NavMeshAgent).</p>
+            </div>
+            <div class="footer">
+                <span>10 / 20</span>
+                <div class="progress"><i style="width:50%;"></i></div>
+                <span>Pengujian FSM</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 11 : PENGUJIAN NAVMESH ==================== -->
+        <section class="slide" data-chapter="PENGUJIAN NAVMESH">
+            <div class="kicker">BAB IV · BLACK BOX TESTING</div>
+            <h1>Navigasi NavMesh: <span class="accent">100% Success Rate</span></h1>
+            <div class="body">
+                <div class="grid3">
+                    <div class="stat green"><div class="num">100%</div><div class="lbl">Success rate navigasi (29 trial di 5 area terbuka)</div></div>
+                    <div class="stat blue"><div class="num">10,2<span style="font-size:1rem;">s</span></div><div class="lbl">Rata-rata waktu tempuh menuju pemain</div></div>
+                    <div class="stat green"><div class="num">21/21</div><div class="lbl">Area berhasil dinavigasi</div></div>
+                </div>
+                <p class="small" style="margin-top:0.6em;">✅ <b>0 kejadian path stuck</b> di area terbuka. Pada ruangan berpintu, NPC berhenti di ambang pintu — sesuai batasan cakupan penelitian.</p>
+            </div>
+            <div class="footer">
+                <span>11 / 20</span>
+                <div class="progress"><i style="width:55%;"></i></div>
+                <span>Pengujian NavMesh</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 12 : PENGUJIAN AREA TRIGGER ==================== -->
+        <section class="slide" data-chapter="PENGUJIAN AREA TRIGGER">
+            <div class="kicker">BAB IV · BLACK BOX TESTING</div>
+            <h1>Area Trigger: <span class="accent">21 dari 21 Area Lulus</span></h1>
+            <div class="body">
+                <ul class="points tight">
+                    <li>Trigger aktif saat dimasuki, informasi sesuai lokasi, nonaktif saat ditinggalkan — <b>seluruh 21 area lulus tanpa anomali</b></li>
+                    <li>Panel informasi tampil selama <b>20 detik</b> dengan auto-hide</li>
+                    <li>Mekanisme <b>cooldown</b> teruji tahan terhadap spam gerakan keluar-masuk</li>
+                </ul>
+                <div class="panel" style="margin-top:0.5em;">
+                    <h3>Ringkasan Ketiga Komponen Inti</h3>
+                    <table>
+                        <tr><th>Komponen</th><th>Indikator</th><th>Hasil</th></tr>
+                        <tr><td>FSM</td><td>Akurasi transisi</td><td class="mono" style="color:#4ade80;">100% (100/100)</td></tr>
+                        <tr><td>NavMesh</td><td>Success rate</td><td class="mono" style="color:#4ade80;">100% (29/29)</td></tr>
+                        <tr><td>Area Trigger</td><td>Area lulus kriteria</td><td class="mono" style="color:#4ade80;">100% (21/21)</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="footer">
+                <span>12 / 20</span>
+                <div class="progress"><i style="width:60%;"></i></div>
+                <span>Pengujian Area Trigger</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 13 : ARGUMEN SUS & UEQ ==================== -->
+        <section class="slide" data-chapter="ARGUMEN: SUS & UEQ">
+            <div class="kicker">⚡ ARGUMEN KUNCI</div>
+            <h1>Mengapa FSM diuji dengan <span class="highlight">SUS &amp; UEQ</span>?</h1>
+            <div class="body">
+                <div class="panel defense" style="border-color:#a78bfa;">
+                    <h3 style="color:#a78bfa;">Dua Lapis Pengujian yang Saling Melengkapi</h3>
+                    <div class="grid2" style="align-items:stretch;">
+                        <div style="border-right:1px solid var(--card-border); padding-right:1em;">
+                            <h4 style="color:var(--accent); font-size:0.8rem;">🔧 Pengujian Fungsional (Black Box)</h4>
+                            <ul class="points tight">
+                                <li>Menguji <b>kebenaran teknis</b>: transisi state, navigasi, deteksi trigger</li>
+                                <li>Menjawab: <i>"Apakah FSM bekerja sesuai rancangan?"</i></li>
+                                <li><b>Bukti:</b> Akurasi 100%, response time terukur, success rate 100%</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color:#fbbf24; font-size:0.8rem;">👤 Pengujian Pengguna (SUS &amp; UEQ)</h4>
+                            <ul class="points tight">
+                                <li>Mengukur <b>penerimaan pengguna</b>: kemudahan &amp; pengalaman</li>
+                                <li>Menjawab: <i>"Apakah pengguna menerima aplikasi ini?"</i></li>
+                                <li>FSM adalah <b>alat</b>; SUS/UEQ adalah bukti bahwa alat tersebut <b>bermanfaat</b> bagi pengguna</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p class="small" style="margin-top:0.4em; text-align:center;">✅ Fokus penelitian adalah <b>NPC Pemandu</b> (bukan musuh) → tujuan akhirnya adalah <b>pengalaman orientasi yang positif</b>. Kedua pengujian saling memperkuat.</p>
+            </div>
+            <div class="footer">
+                <span>13 / 20</span>
+                <div class="progress"><i style="width:65%;"></i></div>
+                <span>Argumen: SUS &amp; UEQ</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 14 : ARGUMEN RESPONDEN ==================== -->
+        <section class="slide" data-chapter="ARGUMEN: RESPONDEN">
+            <div class="kicker">⚡ ARGUMEN KUNCI</div>
+            <h1>Mengapa hanya <span class="highlight">6 Responden</span>?</h1>
+            <div class="body">
+                <div class="panel defense" style="border-color:#a78bfa;">
+                    <h3 style="color:#a78bfa;">Merujuk pada Nielsen (1993) — Usability Engineering</h3>
+                    <div class="grid2" style="align-items:stretch;">
+                        <div>
+                            <div class="stat purple"><div class="num">5</div><div class="lbl">Responden sudah cukup untuk menemukan <b>85%</b> masalah usability (Nielsen, 1993)</div></div>
+                            <p class="small" style="margin-top:0.4em;">Penelitian ini menggunakan <b>6 responden</b> → <span style="color:#4ade80;">melampaui standar minimum</span> dan telah divalidasi dengan data kuantitatif (SUS &amp; UEQ).</p>
+                        </div>
+                        <div style="border-left:1px solid var(--card-border); padding-left:1em;">
+                            <h4 style="color:var(--accent); font-size:0.8rem;">📊 Data yang Dihasilkan Cukup Kuat</h4>
+                            <ul class="points tight">
+                                <li><b>SUS 79,58</b> (Baik) — data dari 6 responden sudah konsisten</li>
+                                <li><b>UEQ 2,14</b> (Sangat Baik) — seluruh dimensi positif</li>
+                                <li>Feedback kualitatif <b>konsisten</b> dengan data kuantitatif</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <p class="small" style="margin-top:0.4em; text-align:center;">✅ Jumlah responden <b>tidak mengurangi validitas</b> temuan teknis (FSM, NavMesh, Area Trigger) yang diuji melalui Black Box Testing.</p>
+            </div>
+            <div class="footer">
+                <span>14 / 20</span>
+                <div class="progress"><i style="width:70%;"></i></div>
+                <span>Argumen: Responden</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 15 : HASIL SUS ==================== -->
+        <section class="slide" data-chapter="HASIL SUS">
+            <div class="kicker">BAB IV · USABILITY TESTING</div>
+            <h1>Skor SUS Rata-Rata <span class="accent">79,58</span> — Kategori Baik</h1>
+            <div class="body">
+                <div class="cols">
+                    <div class="col">
+                        <table>
+                            <tr><th>Responden</th><th>Skor</th><th>Kategori</th></tr>
+                            <tr><td>R1</td><td class="mono">67,5</td><td>Cukup</td></tr>
+                            <tr><td>R2</td><td class="mono">100</td><td>Sangat Baik</td></tr>
+                            <tr><td>R3</td><td class="mono">90</td><td>Sangat Baik</td></tr>
+                            <tr><td>R4</td><td class="mono">77,5</td><td>Baik</td></tr>
+                            <tr><td>R5</td><td class="mono">67,5</td><td>Cukup</td></tr>
+                            <tr><td>R6</td><td class="mono">75</td><td>Baik</td></tr>
+                        </table>
+                    </div>
+                    <div class="col">
+                        <div class="stat amber"><div class="num">79,58</div><div class="lbl">Rata-rata skor SUS, melampaui ambang kelayakan ≥68</div></div>
+                        <p class="small" style="margin-top:0.4em;">4 dari 6 responden (66,7%) di atas ambang batas. Skor terendah (R1, R5) berkorelasi dengan kendala performa pada perangkat RAM &lt;4GB, <b>bukan</b> kerumitan antarmuka.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span>15 / 20</span>
+                <div class="progress"><i style="width:75%;"></i></div>
+                <span>Hasil SUS</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 16 : HASIL UEQ ==================== -->
+        <section class="slide" data-chapter="HASIL UEQ">
+            <div class="kicker">BAB IV · USER EXPERIENCE TESTING</div>
+            <h1>Seluruh 6 Dimensi UEQ <span class="accent">Positif</span></h1>
+            <div class="body">
+                <div class="grid6">
+                    <div class="stat blue" style="padding-left:0.4em;"><div class="num" style="font-size:1.3rem;">2,25</div><div class="lbl">Attractiveness</div></div>
+                    <div class="stat blue" style="padding-left:0.4em;"><div class="num" style="font-size:1.3rem;">2,00</div><div class="lbl">Perspicuity</div></div>
+                    <div class="stat" style="padding-left:0.4em; border-color:#fb923c;"><div class="num" style="font-size:1.3rem; color:#fb923c;">1,75</div><div class="lbl">Efficiency</div></div>
+                    <div class="stat blue" style="padding-left:0.4em;"><div class="num" style="font-size:1.3rem;">1,91</div><div class="lbl">Dependability</div></div>
+                    <div class="stat green" style="padding-left:0.4em;"><div class="num" style="font-size:1.3rem;">2,67</div><div class="lbl">Stimulation</div></div>
+                    <div class="stat blue" style="padding-left:0.4em;"><div class="num" style="font-size:1.3rem;">2,25</div><div class="lbl">Novelty</div></div>
+                </div>
+                <p class="small" style="margin-top:0.8em;">Rata-rata keseluruhan <b style="color:#fff;">2,14</b> (kategori Sangat Baik). <b>Stimulation</b> tertinggi — NPC Widy berhasil membangkitkan motivasi eksplorasi.</p>
+            </div>
+            <div class="footer">
+                <span>16 / 20</span>
+                <div class="progress"><i style="width:80%;"></i></div>
+                <span>Hasil UEQ</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 17 : FEEDBACK KUALITATIF ==================== -->
+        <section class="slide" data-chapter="FEEDBACK KUALITATIF">
+            <div class="kicker">BAB IV · FEEDBACK &amp; SARAN</div>
+            <h1>Feedback Kualitatif &amp; <span class="accent">Saran Perbaikan</span></h1>
+            <div class="body">
+                <div class="table-wrap" style="max-height:28vh;">
+                    <table>
+                        <tr><th>Kendala / Feedback</th><th>Saran Perbaikan</th><th>Prioritas</th></tr>
+                        <tr><td>Aplikasi berat untuk perangkat kelas bawah (R1,R4,R5)</td><td>Optimasi aset 3D (LOD, texture compression)</td><td style="color:#f87171; font-weight:600;">Tinggi</td></tr>
+                        <tr><td>Tidak bisa masuk ruang kuliah/aula (R2)</td><td>Perluasan akses area dan interaksi pintu</td><td style="color:#fbbf24; font-weight:600;">Sedang</td></tr>
+                        <tr><td>Karakter NPC terlalu sepi (R3)</td><td>Tambahkan Idle Animation atau suara ambient</td><td style="color:#fbbf24; font-weight:600;">Sedang</td></tr>
+                        <tr><td>Dialog kurang banyak (R6)</td><td>Perbanyak variasi dialog dan interaksi</td><td style="color:#fbbf24; font-weight:600;">Sedang</td></tr>
+                        <tr><td>Kurang variasi kendaraan (R4)</td><td>Tambahkan jenis kendaraan lain</td><td style="color:#8a9bb5; font-weight:600;">Rendah</td></tr>
+                    </table>
+                </div>
+                <p class="small" style="margin-top:0.4em;">✅ Feedback kualitatif konsisten dengan skor SUS &amp; UEQ — menjadi arah pengembangan aplikasi ke depan.</p>
+            </div>
+            <div class="footer">
+                <span>17 / 20</span>
+                <div class="progress"><i style="width:85%;"></i></div>
+                <span>Feedback Kualitatif</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 18 : PERBANDINGAN ==================== -->
+        <section class="slide" data-chapter="PERBANDINGAN">
+            <div class="kicker">BAB IV · PERBANDINGAN</div>
+            <h1>Perbandingan Metrik <span class="accent">dengan Penelitian Terdahulu</span></h1>
+            <div class="body">
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>Penelitian</th><th>Metode</th><th>Metrik</th><th>Hasil Terdahulu</th><th>Hasil Penelitian Ini</th></tr>
+                        <tr><td>Andhika &amp; Alghifari (2025)</td><td>FSM</td><td>Response time</td><td>&lt; 100 ms</td><td style="color:var(--accent);">100% akurasi; 957,83 ms</td></tr>
+                        <tr><td>Hidayat &amp; Qoiriah (2022)</td><td>A* + NavMesh</td><td>Akurasi pathfinding</td><td>100%, margin 0,226m</td><td style="color:var(--accent);">100% (29/29 trial)</td></tr>
+                        <tr><td>Virtual Tour Nusa Putra</td><td>SUS</td><td>Skor kelayakan</td><td>94%</td><td style="color:var(--accent);">79,58 (Baik)</td></tr>
+                        <tr><td>Hunta, Santa, &amp; Tinambunan (2026)</td><td>Black Box</td><td>Keberhasilan transisi</td><td>100%</td><td style="color:var(--accent);">100% (21/21 area)</td></tr>
+                    </table>
+                </div>
+                <p class="small" style="margin-top:0.4em;">📌 Response time penelitian ini tidak dapat dibandingkan langsung dengan Andhika &amp; Alghifari karena perbedaan definisi pengukuran (level perilaku fisik vs level keputusan logika).</p>
+            </div>
+            <div class="footer">
+                <span>18 / 20</span>
+                <div class="progress"><i style="width:90%;"></i></div>
+                <span>Perbandingan</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 19 : KETERBATASAN ==================== -->
+        <section class="slide" data-chapter="KETERBATASAN">
+            <div class="kicker">BAB IV · REFLEKSI ILMIAH</div>
+            <h1>Keterbatasan Penelitian</h1>
+            <div class="body">
+                <ul class="points tight">
+                    <li>Cakupan hanya <b>Kampus Tiga</b> — Kampus Satu, Dua, Empat belum terepresentasi</li>
+                    <li>FSM hanya mencakup <b>3 state dasar</b>, belum ada Greeting/Pointing</li>
+                    <li>Pengujian melibatkan <b>6 responden</b> dari satu wilayah (Malang) — generalisasi terbatas</li>
+                    <li>Kendala performa pada perangkat <b>RAM &lt;4GB</b> meski telah dioptimasi</li>
+                    <li>Hanya mendukung platform <b>Android</b>; iOS &amp; desktop belum tercakup</li>
+                </ul>
+            </div>
+            <div class="footer">
+                <span>19 / 20</span>
+                <div class="progress"><i style="width:95%;"></i></div>
+                <span>Keterbatasan</span>
+            </div>
+        </section>
+
+        <!-- ==================== SLIDE 20 : KESIMPULAN & SARAN ==================== -->
+        <section class="slide" data-chapter="KESIMPULAN & SARAN">
+            <div class="kicker">BAB V · PENUTUP</div>
+            <h1>Kesimpulan &amp; Saran</h1>
+            <div class="body">
+                <div class="grid2">
+                    <div>
+                        <h3 style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--accent);">Kesimpulan</h3>
+                        <ul class="points tight">
+                            <li>FSM, NavMesh, dan Area Trigger <b>berhasil diimplementasikan</b> dan terbukti berfungsi 100% sesuai rancangan</li>
+                            <li>SUS 79,58 (Baik) &amp; UEQ 2,14 (Sangat Baik) — aplikasi <b>layak digunakan</b> sebagai media orientasi kampus</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase; color:#fbbf24;">Saran Pengembangan</h3>
+                        <ul class="points tight">
+                            <li>Tambah state FSM (Greeting, Pointing) &amp; optimasi performa perangkat kelas bawah</li>
+                            <li>Perluasan area, fitur multiplayer, tutorial interaktif, &amp; distribusi via Play Store</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="divider" style="margin-top:0.8em;"></div>
+                <p style="text-align:center; font-size:1.1rem; color:var(--accent);">Terima kasih — Sesi Tanya Jawab</p>
+            </div>
+            <div class="footer">
+                <span>20 / 20</span>
+                <div class="progress"><i style="width:100%;"></i></div>
+                <span>Kesimpulan &amp; Saran</span>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="nav-btn" id="prev">‹</div>
+    <div class="nav-btn" id="next">›</div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let idx = 0;
+        const total = slides.length;
+
+        function render() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+            const pct = ((idx + 1) / total) * 100;
+            const bar = document.querySelector('.progress i');
+            if (bar) bar.style.width = pct + '%';
+        }
+
+        function go(delta) {
+            idx = Math.max(0, Math.min(total - 1, idx + delta));
+            render();
+        }
+
+        document.getElementById('next').addEventListener('click', () => go(1));
+        document.getElementById('prev').addEventListener('click', () => go(-1));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault();
+                go(1); }
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault();
+                go(-1); }
+        });
+
+        let touchX = null;
+        document.body.addEventListener('touchstart', (e) => {
+            touchX = e.touches[0].clientX;
+        });
+        document.body.addEventListener('touchend', (e) => {
+            if (touchX === null) return;
+            const dx = e.changedTouches[0].clientX - touchX;
+            if (dx > 50) go(-1);
+            if (dx < -50) go(1);
+            touchX = null;
+        });
+
+        render();
+    </script>
+
+</body>
+</html>
