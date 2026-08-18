@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alat Bantu Sidang — Widy FSM (75 Pertanyaan)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0b0e1e;
+            color: #e9f1f3;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .header h1 span {
+            color: #6c8cff;
+        }
+        .header .sub {
+            color: #8a9bb5;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+        .badge-session {
+            display: inline-block;
+            background: rgba(108, 140, 255, 0.12);
+            border: 1px solid rgba(108, 140, 255, 0.2);
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #6c8cff;
+            letter-spacing: 0.05em;
+            font-family: 'JetBrains Mono', monospace;
+            margin-top: 0.5rem;
+        }
+        .search-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .search-box input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem 1.2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #6c8cff;
+        }
+        .search-box input::placeholder {
+            color: #5a6a82;
+        }
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: transparent;
+            color: #8a9bb5;
+            font-size: 0.75rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .filter-btn:hover {
+            border-color: #6c8cff;
+            color: #fff;
+        }
+        .filter-btn.active {
+            background: rgba(108, 140, 255, 0.15);
+            border-color: #6c8cff;
+            color: #fff;
+        }
+        .stats {
+            margin-top: 0.8rem;
+            font-size: 0.8rem;
+            color: #5a6a82;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stats b {
+            color: #8a9bb5;
+        }
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .card:hover {
+            border-color: rgba(108, 140, 255, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .card .q {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            gap: 0.6rem;
+            align-items: flex-start;
+        }
+        .card .q .num {
+            color: #6c8cff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            margin-top: 0.1rem;
+        }
+        .card .a {
+            color: #bcc9db;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            padding-left: 2rem;
+        }
+        .card .a b {
+            color: #fff;
+        }
+        .card .tags {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-top: 0.6rem;
+            padding-left: 2rem;
+        }
+        .card .tags span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            color: #5a6a82;
+        }
+        .card .tags .cat {
+            background: rgba(108, 140, 255, 0.08);
+            border-color: rgba(108, 140, 255, 0.15);
+            color: #6c8cff;
+        }
+        .highlight {
+            background: rgba(245, 166, 35, 0.25);
+            color: #fbbf24;
+            padding: 0.05rem 0.2rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        .empty {
+            text-align: center;
+            color: #5a6a82;
+            padding: 3rem 1rem;
+            font-size: 0.95rem;
+        }
+        .empty .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            opacity: 0.4;
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .search-box {
+                flex-direction: column;
+            }
+            .search-box input {
+                width: 100%;
+                min-width: unset;
+            }
+            .card .a {
+                padding-left: 0;
+            }
+            .card .tags {
+                padding-left: 0;
+            }
+            .card .q .num {
+                min-width: 28px;
+            }
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(108, 140, 255, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(108, 140, 255, 0.5);
+        }
+        .card {
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Alat Bantu Sidang — <span>Widy FSM</span></h1>
+            <div class="sub">75 pertanyaan & jawaban siap pakai — gaya santai tapi berbobot</div>
+            <div class="badge-session">📌 75 Pertanyaan · 6 Kategori</div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Cari kata kunci… (contoh: response time, responden, sus)" />
+                <div class="filter-group" id="filterGroup">
+                    <button class="filter-btn active" data-filter="all">Semua</button>
+                    <button class="filter-btn" data-filter="latar">Latar Belakang</button>
+                    <button class="filter-btn" data-filter="metode">Metode & Teknis</button>
+                    <button class="filter-btn" data-filter="pengujian">Pengujian & Evaluasi</button>
+                    <button class="filter-btn" data-filter="hasil">Hasil & Kesimpulan</button>
+                    <button class="filter-btn" data-filter="kritis">Argumen Kritis</button>
+                    <button class="filter-btn" data-filter="pengembangan">Pengembangan</button>
+                </div>
+            </div>
+            <div class="stats" id="stats">Menampilkan <b id="countDisplay">0</b> hasil dari <b id="totalDisplay">0</b> pertanyaan</div>
+        </div>
+
+        <div class="results" id="resultsContainer"></div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  DATABASE PERTANYAAN (75 Pertanyaan — Versi Santai)
+        // ============================================================
+        const questions = [{
+            id: 1,
+            category: 'latar',
+            question: 'Kenapa sih topik ini dipilih? Apa urgensi dari penelitian ini?',
+            answer: 'Jadi gini, selama ini tur fisik di kampus itu agak kurang efektif buat mahasiswa baru. Informasinya cuma satu arah, jadi mereka sering lupa-lupa letak ruangan, apalagi kalau dari luar kota yang belum pernah lihat kampus sama sekali. Materi tur juga gampang ketinggalan zaman kalau ada gedung baru. Karena itu saya coba bikin simulasi interaktif berbasis mobile yang bisa diakses kapan aja, dengan NPC pemandu yang perilakunya lebih adaptif.',
+            tags: ['urgensi', 'tur fisik', 'disorientasi', 'latar belakang']
+        }, {
+            id: 2,
+            category: 'latar',
+            question: 'Apa bedanya penelitian ini sama penelitian-penelitian sebelumnya?',
+            answer: 'Kalau dilihat, penelitian sebelumnya itu kebanyakan fokus ke NPC musuh buat game horor atau aksi. Saya di sini fokus ke NPC pemandu (companion) buat simulasi kampus. Selain itu, saya gabungkan FSM dengan NavMesh dan Area Trigger secara bersamaan, yang ternyata belum banyak diterapkan di NPC pemandu sebelumnya.',
+            tags: ['perbedaan', 'research gap', 'NPC musuh', 'NPC pemandu']
+        }, {
+            id: 3,
+            category: 'latar',
+            question: 'Kenapa milih Kampus Tiga sebagai objek simulasi?',
+            answer: 'Karena Kampus Tiga itu pusat kegiatan Fakultas Sains dan Teknologi Informasi serta Teknik, dan punya 21 fasilitas yang lumayan kompleks. Jadi pas banget buat dijadikan studi kasus simulasi orientasi.',
+            tags: ['Kampus Tiga', 'objek simulasi', 'lokasi']
+        }, {
+            id: 4,
+            category: 'latar',
+            question: 'Kenapa NPC pemandunya dinamain "Widy"?',
+            answer: 'Widy itu singkatan dari "Widya Gama". Saya pilih biar ada identitas kampusnya dan lebih personal aja gitu, biar karakternya terasa akrab sama pengguna.',
+            tags: ['Widy', 'nama NPC', 'identitas']
+        }, {
+            id: 5,
+            category: 'latar',
+            question: 'Kontribusi penelitian ini buat ilmu pengetahuan itu apa?',
+            answer: 'Jadi, penelitian ini bisa jadi rujukan buat implementasi FSM di NPC pemandu, yang masih jarang dibanding NPC musuh. Saya juga mendokumentasikan integrasi FSM sama NavMesh dan Area Trigger, jadi bisa dipakai sebagai referensi teknis buat pengembang lain.',
+            tags: ['kontribusi', 'ilmu pengetahuan', 'rujukan']
+        }, {
+            id: 6,
+            category: 'latar',
+            question: 'Kenapa milih Unity Engine, bukan Unreal atau Godot?',
+            answer: 'Unity itu lebih ringan, dokumentasinya banyak, dan support buat mobile sangat matang. Buat simulasi kampus 3D yang nggak terlalu berat, Unity lebih cocok daripada Unreal yang berat, atau Godot yang masih kurang ekosistemnya di Indonesia.',
+            tags: ['Unity', 'Unreal', 'Godot', 'engine', 'pemilihan']
+        }, {
+            id: 7,
+            category: 'latar',
+            question: 'Apa alasan pakai Blender buat modeling?',
+            answer: 'Blender itu gratis, powerful, dan bisa export ke Unity dengan mulus. Selain itu saya udah terbiasa pake Blender dari sebelumnya, jadi lebih efisien.',
+            tags: ['Blender', 'modeling', '3D', 'tools']
+        }, {
+            id: 8,
+            category: 'metode',
+            question: 'Kenapa pake FSM, nggak pake Behavior Tree atau HFSM?',
+            answer: 'Karena kebutuhan saya cuma 3 state aja: Waiting, Follow, Catch Up. FSM itu sederhana, gampang diimplementasikan, dan ringan buat HP. Behavior Tree atau HFSM itu lebih cocok buat perilaku yang super kompleks, kalau dipaksa pake malah jadi berlebihan (overkill).',
+            tags: ['FSM', 'Behavior Tree', 'HFSM', 'alasan', 'kompleksitas']
+        }, {
+            id: 9,
+            category: 'metode',
+            question: 'Dari mana dapat angka threshold jarak 2m, 5m, dan >5m?',
+            answer: 'Itu saya ambil dari pengamatan pola orang jalan bareng. Kalau jarak kurang dari 2m itu kayak nempel (menunggu). 2-5m itu jarak ideal buat jalan berdampingan. Kalau lebih dari 5m, berarti udah ketinggalan dan harus ngejar. Saya sesuaikan juga sama skala lingkungan 3D di Unity.',
+            tags: ['threshold', 'jarak', '2m', '5m', 'parameter']
+        }, {
+            id: 10,
+            category: 'metode',
+            question: 'Gimana cara ngukur response time FSM?',
+            answer: 'Saya hitung selisih waktu dari saat kondisi berubah (misal pemain mulai lari) sampai NPC benar-benar berubah perilaku (kecepatan/animasi). Saya pake timestamp di log Unity dan ulangi tiap skenario 10-20 kali buat dapetin rata-rata.',
+            tags: ['response time', 'pengukuran', 'timestamp', 'log Unity']
+        }, {
+            id: 11,
+            category: 'metode',
+            question: 'Nah, ini pertanyaan yang sering muncul. Kenapa response time saya 957 ms, padahal penelitian lain cuma <100 ms?',
+            answer: 'Ini soal definisi, Pak/Bu. Kalau penelitian saya, response time diukur sampai NPC beneran bergerak secara fisik—mulai dari jalan, berbelok, sampai mencapai titik tujuan, yang butuh waktu tempuh via NavMesh. Sementara penelitian lain mungkin cuma ngukur seberapa cepat logika if-else di kode berubah, yang emang cuma butuh sekejap (di bawah 1 frame). Jadi angka ini nggak bisa dibandingkan langsung karena konteksnya beda.',
+            tags: ['response time', '957 ms', 'Andhika', 'perbedaan definisi', 'level fisik', 'level logika']
+        }, {
+            id: 12,
+            category: 'metode',
+            question: 'Loh, kenapa di skenario "Pemain lari menjauh" response time-nya 0,00 ms?',
+            answer: 'Itu karena di skenario Catch Up, NPC langsung ubah kecepatan di frame yang sama. Logika transisinya kan dievaluasi tiap frame di Update(), jadi nggak ada jeda. Artinya, keputusan logika FSM itu berjalan instan.',
+            tags: ['0 ms', 'Catch Up', 'instan', 'frame']
+        }, {
+            id: 13,
+            category: 'metode',
+            question: 'Terus, kenapa di "Pemain jalan normal" response time-nya malah 2199 ms?',
+            answer: 'Kalau di skenario Follow, NPC harus menempuh jarak fisik yang lumayan jauh (sekitar 10 meter) buat mencapai posisi pemain, dan NavMeshAgent butuh waktu buat akselerasi. Jadi itu bukan karena logika FSM-nya lambat, tapi karena proses gerak fisik NPC-nya yang memakan waktu.',
+            tags: ['2199 ms', 'Follow', 'jarak fisik', 'akselerasi']
+        }, {
+            id: 14,
+            category: 'metode',
+            question: 'Gimana cara mastiin NavMesh bekerja di seluruh area kampus?',
+            answer: 'Saya bake NavMesh di semua lantai yang bisa dilalui, termasuk koridor, kelas, lab, dan jalur luar. Terus saya tes dengan naruh pemain di 21 area satu per satu dan liat apakah NPC bisa sampai ke pemain tanpa nabrak atau stuck. Hasilnya 100% sukses (29/29 trial).',
+            tags: ['NavMesh', 'baking', 'success rate', 'pengujian']
+        }, {
+            id: 15,
+            category: 'metode',
+            question: 'Kenapa NPC Widy nggak bisa masuk ke ruangan yang ada pintunya?',
+            answer: 'Ini keterbatasan dari cakupan penelitian saya. Saya belum implementasi interaksi objek kayak buka pintu buat NPC. Saya catat ini sebagai kekurangan dan saran buat pengembangan ke depan.',
+            tags: ['pintu', 'ruangan', 'keterbatasan', 'interaksi objek']
+        }, {
+            id: 16,
+            category: 'metode',
+            question: 'Gimana cara kerja Area Trigger di 21 area itu?',
+            answer: 'Saya pake Box Collider yang di-set Is Trigger di tiap area. Pas pemain masuk, OnTriggerEnter bakal munculin panel info nama ruangan dan deskripsinya. Pas keluar, OnTriggerExit nutup lagi panelnya. Udah saya tes, 21 area 100% berfungsi.',
+            tags: ['Area Trigger', 'OnTriggerEnter', 'panel informasi', '21 area']
+        }, {
+            id: 17,
+            category: 'metode',
+            question: 'Apa itu functional fidelity dan kenapa dipakai?',
+            answer: 'Functional fidelity itu pendekatan yang mengutamakan akurasi tata letak dan fungsi ruangan, bukan replika visual yang super detail. Saya pilih ini karena buat orientasi kampus, yang penting adalah letak ruangan dan fungsinya, bukan tekstur fotorealistik. Ini sesuai sama teori Gredler (2004).',
+            tags: ['functional fidelity', 'Gredler', 'akurasi', 'visual']
+        }, {
+            id: 18,
+            category: 'metode',
+            question: 'Kenapa pilih GDLC dibanding waterfall atau agile?',
+            answer: 'GDLC itu khusus buat pengembangan game/simulasi, jadi tahapannya pas banget: dari inisiasi sampai rilis. Waterfall terlalu kaku, agile terlalu umum. GDLC juga mendukung iterasi, jadi saya bisa perbaiki aplikasi berdasarkan feedback pengujian.',
+            tags: ['GDLC', 'waterfall', 'agile', 'metodologi']
+        }, {
+            id: 19,
+            category: 'pengujian',
+            question: 'Apa bedanya Black Box Testing sama SUS/UEQ?',
+            answer: 'Black Box itu buat ngetes kebenaran sistem secara teknis—misal FSM-nya berfungsi atau nggak. Sedangkan SUS/UEQ itu buat ngukur persepsi pengguna—apakah aplikasinya gampang dipake dan enak digunakan. Jadi Black Box buktiin sistemnya jalan, SUS/UEQ buktiin penggunanya suka. Dua-duanya saling melengkapi.',
+            tags: ['Black Box', 'SUS', 'UEQ', 'perbedaan', 'teknis', 'pengguna']
+        }, {
+            id: 20,
+            category: 'pengujian',
+            question: 'Kok FSM yang notabene teknis malah diuji pake SUS dan UEQ yang sifatnya persepsi?',
+            answer: 'Jadi saya bagi pengujian jadi dua lapis. Lapis pertama Black Box khusus buat ngetes kebenaran teknis FSM, NavMesh, dan Area Trigger. Lapis kedua SUS/UEQ buat ngukur apakah perilaku adaptif dari FSM tadi bener-bener diterima sama pengguna. Karena fokus saya kan NPC pemandu, tujuannya ya pengalaman orientasi yang positif. Jadi dua-duanya saling menguatkan.',
+            tags: ['FSM', 'SUS', 'UEQ', 'alasan', 'dua lapis', 'teknis', 'persepsi']
+        }, {
+            id: 21,
+            category: 'pengujian',
+            question: 'Kok cuma pake 6 responden? Apakah itu cukup?',
+            answer: 'Saya mengacu ke Nielsen (1993) yang bilang 5 responden udah cukup buat nemuin 85% masalah usability. Saya pake 6, jadi malah lebih dari standar minimum. Buat pengujian formatif kaya gini, 6 responden udah cukup dapetin data kuantitatif yang konsisten dan feedback yang beragam.',
+            tags: ['responden', '6 responden', 'Nielsen', 'usability', 'cukup']
+        }, {
+            id: 22,
+            category: 'pengujian',
+            question: 'Tapi, apa 6 responden bisa mewakili banyak orang?',
+            answer: 'Saya akui sih 6 responden belum cukup buat generalisasi luas. Saya catat ini sebagai keterbatasan di skripsi. Tapi buat usability testing formatif, 6 udah cukup buat nemuin masalah-masalah utama. Ke depannya, penelitian lanjutan perlu libatin lebih banyak responden dari berbagai daerah.',
+            tags: ['responden', 'generalisasi', 'keterbatasan', 'Nielsen']
+        }, {
+            id: 23,
+            category: 'pengujian',
+            question: 'Gimana cara milih respondennya?',
+            answer: 'Kriterianya: (a) belum pernah lihat Kampus Tiga, (b) punya HP Android yang memadai, (c) mau ikut pengujian 60-90 menit. Saya ambil lulusan SMA/SMK dan mahasiswa dari kampus lain karena mereka cocok sama target pengguna aplikasi ini, yaitu calon mahasiswa baru.',
+            tags: ['kriteria responden', 'pemilihan', 'target pengguna']
+        }, {
+            id: 24,
+            category: 'pengujian',
+            question: 'Kenapa milih SUS dan UEQ sebagai alat ukur?',
+            answer: 'SUS itu standar, gampang, dan udah terbukti valid buat ngukur usability (Brooke, 1996). UEQ lebih lengkap karena ngukur 6 dimensi pengalaman pengguna (Laugwitz, 2008). Dua-duanya juga udah sering dipakai di penelitian virtual tour kampus lain, jadi hasilnya bisa dibanding-bandingkan.',
+            tags: ['SUS', 'UEQ', 'instrumen', 'Brooke', 'Laugwitz']
+        }, {
+            id: 25,
+            category: 'pengujian',
+            question: 'Tolak ukur SUS ≥ 68 dan UEQ positif itu dari mana?',
+            answer: 'SUS ≥ 68 itu rata-rata historis dari ribuan studi pake SUS. Skor di atas 68 dianggap "di atas rata-rata" dan bisa diterima. Buat UEQ, skor positif (di atas 0) artinya dimensi itu udah baik, dan di atas 0,8 termasuk "Good" berdasarkan benchmark Schrepp dkk. Ini juga dipakai di penelitian virtual tour kampus lain, jadi saya ikutin standar yang sama.',
+            tags: ['SUS 68', 'UEQ positif', 'tolok ukur', 'benchmark']
+        }, {
+            id: 26,
+            category: 'pengujian',
+            question: 'Kenapa skor SUS R1 dan R5 rendah (67,5)?',
+            answer: 'Itu karena perangkat mereka RAM-nya di bawah 4GB, jadi aplikasi agak berat dan sering lag. Pas saya tanya, mereka bilang antarmukanya sebenernya nggak rumit, cuma performanya aja yang lemot. Jadi skor rendah itu karena keterbatasan perangkat, bukan karena desain aplikasinya jelek.',
+            tags: ['R1', 'R5', '67.5', 'performa', 'RAM']
+        }, {
+            id: 27,
+            category: 'pengujian',
+            question: 'Apakah skor Stimulation yang tinggi (2,67) itu murni karena FSM?',
+            answer: 'Nggak murni sih, Pak/Bu. Itu gabungan dari semua fitur: kebebasan eksplorasi, kendaraan, music player, dan sistem dialog. Tapi FSM tetap punya peran penting karena Widy berfungsi sebagai "pemandu" yang ngasih arahan. Ini didukung sama feedback R6 yang bilang dialognya "mirip game Persona", dan yang penting nggak ada responden yang komplain soal perilaku adaptif NPC-nya.',
+            tags: ['Stimulation', '2.67', 'UEQ', 'FSM', 'fitur lain']
+        }, {
+            id: 28,
+            category: 'pengujian',
+            question: 'Apa ada perbedaan hasil antara pengujian di Unity Editor dan di HP beneran?',
+            answer: 'Ada, Pak/Bu. Di Editor biasanya lebih smooth karena resource laptop lebih besar. Di HP, apalagi yang low-end, frame rate-nya kadang drop. Tapi untuk fungsionalitas dasar (FSM, NavMesh, Trigger) hasilnya konsisten.',
+            tags: ['Unity Editor', 'HP', 'performa', 'konsistensi']
+        }, {
+            id: 29,
+            category: 'pengujian',
+            question: 'Apa aplikasi ini sudah diuji coba sama mahasiswa baru beneran?',
+            answer: 'Belum sampai ke mahasiswa baru asli, Pak/Bu. Responden saya adalah lulusan SMA/SMK dan mahasiswa dari kampus lain yang belum pernah ke Kampus Tiga. Tapi karakteristik mereka mirip sama target pengguna, jadi hasilnya cukup representatif buat tahap awal.',
+            tags: ['uji coba', 'mahasiswa baru', 'responden', 'target pengguna']
+        }, {
+            id: 30,
+            category: 'hasil',
+            question: 'Kesimpulan utama dari penelitian ini apa aja?',
+            answer: 'Ada 4 poin: (1) FSM berhasil dengan akurasi 100%, (2) NavMesh sukses dengan 100% success rate, (3) Area Trigger di 21 area 100% berfungsi, dan (4) SUS 79,58 (Baik) dan UEQ 2,14 (Sangat Baik) nunjukin aplikasi ini layak dipake buat orientasi kampus.',
+            tags: ['kesimpulan', 'akurasi', 'success rate', 'SUS', 'UEQ']
+        }, {
+            id: 31,
+            category: 'hasil',
+            question: 'Apa FSM di NPC Widy benar-benar "berhasil"? Buktinya apa?',
+            answer: 'Ya, terbukti secara teknis lewat Black Box Testing. Dari 100 trial, akurasi transisi state 100% dan nggak ada yang gagal. Ditambah lagi NavMesh 100% dan Area Trigger 100%. Ini bukti kuantitatif yang kuat kalau sistemnya bener-bener jalan.',
+            tags: ['FSM', 'berhasil', 'bukti', '100%', 'akurasi']
+        }, {
+            id: 32,
+            category: 'hasil',
+            question: 'Apa kelebihan dan kekurangan utama aplikasi ini?',
+            answer: 'Kelebihannya: NPC adaptif, navigasi otomatis, info tiap area, dan bisa diakses kapan aja. Kekurangannya: agak berat di HP low-end, belum bisa buka pintu, cuma 3 state FSM, dan cuma support Android. Ini jadi catatan buat pengembangan ke depan.',
+            tags: ['kelebihan', 'kekurangan', 'performa', 'pintu', 'Android']
+        }, {
+            id: 33,
+            category: 'hasil',
+            question: 'Aplikasi ini gimana cara dipake di kampus secara nyata?',
+            answer: 'Bisa dipake buat orientasi mahasiswa baru secara blended—mereka eksplorasi virtual dulu baru tur fisik. Update informasi fasilitas juga gampang tinggal update aplikasi. Selain itu, ini juga bisa jadi media promosi buat calon mahasiswa.',
+            tags: ['implementasi', 'kampus', 'orientasi', 'promosi']
+        }, {
+            id: 34,
+            category: 'hasil',
+            question: 'Kalau disimpulin dalam satu kalimat, apa inti dari penelitian ini?',
+            answer: 'Penelitian ini berhasil mengimplementasikan FSM pada NPC pemandu Widy yang perilakunya adaptif, dengan bukti teknis 100% akurat dan diterima baik oleh pengguna, sehingga layak dipakai sebagai media orientasi kampus.',
+            tags: ['inti', 'ringkasan', 'kesimpulan akhir', 'one-liner']
+        }, {
+            id: 35,
+            category: 'hasil',
+            question: 'Apakah ada perbedaan perilaku NPC di area indoor (kelas) vs outdoor (parkir)?',
+            answer: 'Secara perilaku FSM, nggak ada bedanya. Tapi secara navigasi, di outdoor lebih mulus karena area terbuka, sedangkan di indoor kadang agak lambat di koridor sempit. Tapi secara keseluruhan, NPC tetap bisa mencapai pemain di kedua area.',
+            tags: ['indoor', 'outdoor', 'perilaku', 'navigasi']
+        }, {
+            id: 36,
+            category: 'kritis',
+            question: 'Apa kelemahan utama dari FSM itu sendiri?',
+            answer: 'Kelemahan utamanya adalah kalau statenya makin banyak, transisinya makin rumit (state explosion). FSM juga nggak bisa belajar, jadi perilakunya bisa ditebak. Tapi buat kasus saya yang cuma 3 state, ini udah lebih dari cukup.',
+            tags: ['kelemahan FSM', 'state explosion', 'deterministik']
+        }, {
+            id: 37,
+            category: 'kritis',
+            question: 'Kalau pake Behavior Tree, apa hasilnya bakal lebih bagus?',
+            answer: 'Behavior Tree emang lebih fleksibel buat perilaku yang kompleks, tapi buat 3 state sederhana, FSM udah lebih efisien dan gampang. Behavior Tree malah jadi berlebihan (overkill) buat kasus saya.',
+            tags: ['Behavior Tree', 'perbandingan', 'overkill']
+        }, {
+            id: 38,
+            category: 'kritis',
+            question: 'Gimana kalau pemain naik kendaraan? NPC-nya gimana?',
+            answer: 'Saya udah siapin fungsi HideForVehicle() dan ShowAfterVehicle(). Pas pemain naik kendaraan, Widy menghilang dan berhenti. Pas turun, dia muncul lagi di deket pemain. Ini udah saya implementasi di skrip WidyCompanionFollower.cs.',
+            tags: ['kendaraan', 'HideForVehicle', 'ShowAfterVehicle', 'NPC']
+        }, {
+            id: 39,
+            category: 'kritis',
+            question: 'Apakah FSM bisa ngadepin gerakan pemain yang zig-zag atau berhenti mendadak?',
+            answer: 'Bisa, karena transisi dievaluasi setiap frame. Kalau pemain berhenti mendadak, NPC langsung deteksi kecepatan < 0.3 m/s dan pindah ke Waiting. Kalau zig-zag, jarak terus berubah dan NPC bakal ngikutin. Ini terbukti di skenario "Pemain berhenti setelah dikejar" dengan akurasi 100%.',
+            tags: ['zig-zag', 'berhenti mendadak', 'akurasi', '100%']
+        }, {
+            id: 40,
+            category: 'kritis',
+            question: 'Kenapa nggak ngukur efisiensi komputasi kayak FPS atau pemakaian memori?',
+            answer: 'Fokus utama saya di perilaku adaptif NPC dan penerimaan pengguna. Soal efisiensi komputasi emang nggak saya ukur detail karena keterbatasan waktu. Tapi saya tetap catat masalah performa di HP low-end sebagai keterbatasan dan saran buat penelitian selanjutnya.',
+            tags: ['efisiensi', 'FPS', 'memori', 'keterbatasan']
+        }, {
+            id: 41,
+            category: 'kritis',
+            question: 'Gimana cara mastiin lingkungan 3D di aplikasi sesuai sama aslinya?',
+            answer: 'Saya bandingin langsung foto asli sama tampilan in-game di 3 area: Lab Komputer (Gambar 4.2), Aula Lt. 3 (Gambar 4.3), dan Ruang Kelas I2 (Gambar 4.4). Hasilnya layout, proporsi, dan elemen ruangannya mirip, walau tekstur dan lighting saya sederhanakan. Ini sesuai sama pendekatan functional fidelity dari Gredler (2004).',
+            tags: ['validasi', 'lingkungan 3D', 'foto', 'functional fidelity']
+        }, {
+            id: 42,
+            category: 'kritis',
+            question: 'Apa yang paling bikin bangga dari penelitian ini?',
+            answer: 'Saya bangga karena FSM-nya nggak cuma berhasil secara teknis (100% akurasi), tapi juga diterima sama pengguna (SUS 79,58 dan UEQ 2,14). Ini nunjukin teknologi yang bagus itu harus bermanfaat buat orang lain, bukan cuma jalan di kode.',
+            tags: ['kebanggaan', 'akurasi', 'SUS', 'UEQ', 'bermanfaat']
+        }, {
+            id: 43,
+            category: 'kritis',
+            question: 'Apakah FSM ini bisa diterapkan di kampus lain dengan mudah?',
+            answer: 'Secara konsep, FSM-nya bisa dipakai di mana aja. Yang perlu disesuaikan adalah model 3D kampus, NavMesh, dan data Area Trigger. Jadi kampus lain tinggal ganti aset dan data, logika FSM-nya tetep sama. Ini salah satu kelebihan pendekatan yang saya pake.',
+            tags: ['reusabilitas', 'kampus lain', 'adaptasi', 'aset 3D']
+        }, {
+            id: 44,
+            category: 'kritis',
+            question: 'Apa FSM ini bisa dikombinasikan dengan machine learning?',
+            answer: 'Bisa sih, tapi buat kasus saya, machine learning terlalu berat dan nggak perlu. FSM udah cukup buat perilaku sederhana. Kalau mau lebih canggih, bisa pake Reinforcement Learning buat NPC yang belajar dari pengalaman, tapi itu di luar lingkup skripsi ini.',
+            tags: ['machine learning', 'reinforcement learning', 'kompleksitas', 'skala']
+        }, {
+            id: 45,
+            category: 'kritis',
+            question: 'Apa ada potensi bug atau error yang belum ketemu?',
+            answer: 'Pasti ada, Pak/Bu. Saya udah testing sebisa mungkin, tapi nggak mungkin 100% bebas bug. Yang paling saya waspadai adalah edge case kayak pemain yang gerak sangat cepat atau loncat-loncat di area non-NavMesh. Tapi untuk skenario normal, udah aman.',
+            tags: ['bug', 'error', 'edge case', 'testing']
+        }, {
+            id: 46,
+            category: 'kritis',
+            question: 'Apakah FSM bisa mengalami race condition atau lag karena banyaknya proses per frame?',
+            answer: 'Secara teori bisa kalau ada banyak NPC sekaligus. Tapi di aplikasi saya cuma ada 1 NPC, jadi nggak masalah. Proses di Update() juga ringan karena cuma hitung jarak dan set state. Nggak ada operasi berat yang bikin lag.',
+            tags: ['race condition', 'lag', 'performance', 'update']
+        }, {
+            id: 47,
+            category: 'pengembangan',
+            question: 'Kalau disuruh ngembangin lagi, mau ditambahin apa?',
+            answer: 'Saya mau tambah state FSM kayak Greeting sama Pointing, optimasi performa buat HP kelas bawah, tambah fitur multiplayer, perluas area ke kampus lain, dan rilis di Google Play Store biar gampang diunduh.',
+            tags: ['pengembangan', 'state baru', 'multipayer', 'optimasi']
+        }, {
+            id: 48,
+            category: 'pengembangan',
+            question: 'Kalau area kampus diperluas, apakah FSM masih efektif?',
+            answer: 'FSM-nya sendiri nggak masalah karena state-nya tetap 3. Yang perlu disesuaikan adalah threshold jarak dan baking NavMesh di area baru. Tapi kalau area-nya jauh lebih luas, mungkin perlu tambahan state kayak "Patrol" atau "Search" biar lebih efisien.',
+            tags: ['skalabilitas', 'perluasan area', 'threshold', 'NavMesh']
+        }, {
+            id: 49,
+            category: 'pengembangan',
+            question: 'Apa rencana integrasi dengan sistem informasi kampus yang sudah ada?',
+            answer: 'Ide saya sih aplikasi ini bisa dihubungkan dengan sistem akademik atau peta digital kampus. Misalnya, jadwal kuliah bisa langsung ngarahin mahasiswa ke ruangan tertentu. Tapi itu butuh kerja sama dengan bagian IT dan pengembang backend.',
+            tags: ['integrasi', 'sistem informasi', 'backend', 'API']
+        }, {
+            id: 50,
+            category: 'pengembangan',
+            question: 'Apa kendala teknis terbesar saat ngembangin aplikasi ini?',
+            answer: 'Yang paling berat itu ngatur NavMesh biar smooth di seluruh area, apalagi di koridor sempit dan tangga. Saya juga sempat struggle dengan performa di HP low-end, makanya saya pake Occlusion Culling buat ngurangin beban GPU.',
+            tags: ['kendala', 'NavMesh', 'performa', 'Occlusion Culling']
+        }, {
+            id: 51,
+            category: 'pengembangan',
+            question: 'Apa rencana rilis aplikasi ke publik?',
+            answer: 'Saya pengen rilis di Google Play Store. Tapi sebelum itu, perlu polish UI/UX, testing lebih ekstensif, dan perbaikan performa. Ini saya masukin di saran skripsi.',
+            tags: ['rilis', 'Play Store', 'publik', 'polish']
+        }, {
+            id: 52,
+            category: 'pengembangan',
+            question: 'Selain Occlusion Culling, ada optimasi lain yang dilakukan?',
+            answer: 'Saya juga pake LOD (Level of Detail) buat model 3D, kompresi tekstur, dan mengurangi poly count bangunan. Tapi masih belum optimal banget, makanya saya catat ini sebagai saran perbaikan.',
+            tags: ['optimasi', 'LOD', 'kompresi tekstur', 'poly count']
+        }, {
+            id: 53,
+            category: 'pengembangan',
+            question: 'Apakah aplikasi ini menyimpan data pengguna?',
+            answer: 'Nggak, aplikasi ini 100% offline dan nggak nyimpen data apapun. Jadi aman dari sisi privasi. Tapi ke depannya kalau ditambah fitur multiplayer atau achievement, mungkin perlu database.',
+            tags: ['privasi', 'data pengguna', 'offline', 'keamanan']
+        }, {
+            id: 54,
+            category: 'pengembangan',
+            question: 'Rencana menambahkan Augmented Reality (AR) seperti yang disebut di manfaat?',
+            answer: 'Iya, AR adalah salah satu pengembangan ke depan yang saya bayangkan. Misalnya, mahasiswa bisa nunjukin HP ke gedung asli dan muncul informasi overlay. Tapi AR butuh resource yang lebih besar dan framework tambahan kayak AR Foundation. Buat sekarang masih konsep.',
+            tags: ['AR', 'Augmented Reality', 'AR Foundation', 'pengembangan']
+        }, {
+            id: 55,
+            category: 'pengembangan',
+            question: 'Apa NPC Widy bisa kasih petunjuk visual selain dialog?',
+            answer: 'Saat ini masih sebatas dialog dan perilaku adaptif (waiting/follow/catch up). Tapi saya kepikiran tambah fitur "Pointing" atau panah penunjuk arah. Ini udah saya masukin sebagai saran di skripsi.',
+            tags: ['petunjuk visual', 'pointing', 'panah', 'arah']
+        }, {
+            id: 56,
+            category: 'pengembangan',
+            question: 'Bagaimana mengatasi NPC jika pemain mematikan HP tiba-tiba?',
+            answer: 'Karena aplikasi offline, nggak ada state yang perlu disimpan. Jadi kalau HP mati, ya aplikasi tutup dan nggak ada efek samping. Kalau pengen ada fitur save state, itu butuh sistem penyimpanan lokal seperti PlayerPrefs.',
+            tags: ['offline', 'save state', 'PlayerPrefs', 'kestabilan']
+        }, {
+            id: 57,
+            category: 'metode',
+            question: 'Kalau pemain diam di tempat yang nggak terjangkau NavMesh, NPC-nya gimana?',
+            answer: 'Widy bakal berhenti di titik NavMesh terdekat yang masih terhubung dan masuk ke state Waiting. Begitu pemain pindah ke area yang terhubung, Widy bakal otomatis ngitung ulang rute. Ini saya tes dan berhasil.',
+            tags: ['NavMesh', 'off-mesh', 'waiting', 'repath']
+        }, {
+            id: 58,
+            category: 'metode',
+            question: 'Bagaimana menentukan jumlah 20 trial per skenario FSM? Apa dasarnya?',
+            answer: '20 trial itu saya pilih berdasarkan prinsip statistik dasar, supaya dapet rata-rata yang cukup stabil. Kalau terlalu sedikit (misal 5), data bisa bias. 20 udah cukup buat lihat konsistensi, dan masih feasible dilakukan secara manual.',
+            tags: ['trial', 'statistik', 'rata-rata', 'konsistensi']
+        }, {
+            id: 59,
+            category: 'metode',
+            question: 'Apakah ada skenario negatif (fail case) yang diantisipasi saat pengujian FSM?',
+            answer: 'Ada, saya antisipasi skenario di mana pemain bergerak terlalu cepat (naik kendaraan) atau berada di luar NavMesh. Untuk kendaraan, saya pake HideForVehicle. Untuk di luar NavMesh, NPC menunggu di titik terdekat. Sejauh ini nggak ada fail case yang signifikan.',
+            tags: ['fail case', 'negatif', 'antisipasi', 'kendaraan']
+        }, {
+            id: 60,
+            category: 'metode',
+            question: 'Bagaimana NavMesh menangani obstacle dinamis (misal kursi yang bisa dipindah)?',
+            answer: 'NavMesh standar di Unity nggak support obstacle dinamis secara otomatis. Tapi ada NavMeshObstacle component yang bisa dipasang ke objek bergerak. Di penelitian saya, semua obstacle bersifat statis, jadi nggak ada masalah.',
+            tags: ['NavMesh', 'obstacle dinamis', 'NavMeshObstacle', 'statis']
+        }, {
+            id: 61,
+            category: 'metode',
+            question: 'Kenapa pilih durasi tampilan panel informasi 20 detik?',
+            answer: '20 detik itu saya pilih berdasarkan estimasi waktu baca rata-rata orang. Deskripsi ruangan sekitar 2-3 kalimat, cukup dibaca dalam 20 detik. Kalau terlalu sebentar nggak kebaca, kalau terlalu lama bikin bosan. Ini juga saya sesuaikan sama feedback awal.',
+            tags: ['20 detik', 'durasi', 'panel', 'baca']
+        }, {
+            id: 62,
+            category: 'metode',
+            question: 'Apa yang dimaksud dengan "cooldown" pada Area Trigger dan kenapa penting?',
+            answer: 'Cooldown itu jeda waktu minimum sebelum trigger yang sama bisa aktif lagi. Ini penting buat mencegah panel info muncul-hilang terus (flicker) kalau pemain bolak-balik di batas area. Saya set cooldown 20 detik dan hasilnya efektif.',
+            tags: ['cooldown', 'flicker', 'trigger', 'stabilitas']
+        }, {
+            id: 63,
+            category: 'pengujian',
+            question: 'Apakah ada perbedaan persepsi antara responden laki-laki dan perempuan?',
+            answer: 'Saya nggak melakukan analisis berdasarkan gender karena jumlah responden cuma 6 dan nggak seimbang. Ini bisa jadi penelitian lanjutan dengan sampel yang lebih besar dan representatif.',
+            tags: ['gender', 'demografi', 'persepsi', 'analisis']
+        }, {
+            id: 64,
+            category: 'pengujian',
+            question: 'Apa yang dimaksud dengan "critical bugs" dan apakah ditemukan?',
+            answer: 'Critical bugs itu bug yang bikin aplikasi crash atau fitur utama nggak jalan. Di alpha testing, saya nggak nemuin critical bugs. Yang ada mostly bug minor kayak UI yang nggak rapi atau teks yang kepotong. Itu udah saya perbaiki.',
+            tags: ['critical bugs', 'crash', 'alpha testing', 'minor']
+        }, {
+            id: 65,
+            category: 'metode',
+            question: 'Mengapa memilih Android sebagai target platform, bukan iOS?',
+            answer: 'Karena mahasiswa di Indonesia mayoritas pake Android. iOS butuh developer account berbayar dan proses rilis yang lebih rumit. Buat tahap awal, Android lebih accessible dan cost-effective.',
+            tags: ['Android', 'iOS', 'platform', 'target']
+        }, {
+            id: 66,
+            category: 'metode',
+            question: 'Apa ada rencana porting ke PC/desktop?',
+            answer: 'Unity itu cross-platform, jadi secara teknis bisa. Tapi aplikasi ini didesain buat mobile (joystick virtual, touch control). Kalau diport ke PC, perlu penyesuaian kontrol (keyboard/mouse). Ini bisa jadi pengembangan lanjutan.',
+            tags: ['PC', 'desktop', 'cross-platform', 'porting']
+        }, {
+            id: 67,
+            category: 'metode',
+            question: 'Bagaimana memastikan kode WidyCompanionFollower bisa dipakai di project lain?',
+            answer: 'Kode ini modular dan nggak tergantung sama asset spesifik selain NavMesh dan Player tag. Jadi tinggal copy-paste script, attach ke NPC, dan set reference ke player. Tapi tentu harus adjust parameter kayak walkSpeed, sprintSpeed, dan followOffset sesuai kebutuhan.',
+            tags: ['reusabilitas', 'modular', 'script', 'copy-paste']
+        }, {
+            id: 68,
+            category: 'latar',
+            question: 'Apa ada alur cerita atau misi dalam simulasi ini?',
+            answer: 'Ada sistem quest ringan, jadi pemain punya tujuan eksplorasi. Tapi ini masih sederhana, belum terlalu kompleks. Ke depannya bisa dikembangin jadi lebih narrative-driven biar makin engaging.',
+            tags: ['narrative', 'quest', 'alur cerita', 'engagement']
+        }, {
+            id: 69,
+            category: 'latar',
+            question: 'Bagaimana jika mahasiswa baru sudah menggunakan aplikasi ini, apakah tur fisik tetap diperlukan?',
+            answer: 'Tur fisik tetap penting buat interaksi sosial dan pengalaman langsung. Aplikasi ini lebih sebagai pelengkap (blended learning). Jadi mahasiswa bisa eksplorasi virtual dulu, baru tur fisik untuk pengalaman nyata.',
+            tags: ['blended', 'tur fisik', 'komplementer', 'sosial']
+        }, {
+            id: 70,
+            category: 'latar',
+            question: 'Mengapa memilih studi literatur Millington & Funge dan Buckland sebagai acuan utama?',
+            answer: 'Karena buku mereka adalah referensi klasik dan paling komprehensif tentang AI untuk game. Millington & Funge (2009) membahas FSM secara formal dan aplikasinya, sementara Buckland (2005) memberikan contoh praktis implementasi FSM di game. Keduanya sangat relevan.',
+            tags: ['Millington', 'Funge', 'Buckland', 'referensi', 'AI']
+        }, {
+            id: 71,
+            category: 'hasil',
+            question: 'Mengapa nilai Efficiency pada UEQ paling rendah? Apa solusinya?',
+            answer: 'Efficiency rendah karena aplikasi masih agak berat di HP low-end, jadi respon agak lambat. Solusinya: optimasi aset, reduce poly count, dan texture compression. Ini sudah saya masukin di saran.',
+            tags: ['Efficiency', 'UEQ', 'rendah', 'optimasi', 'solusi']
+        }, {
+            id: 72,
+            category: 'hasil',
+            question: 'Berapa ukuran build aplikasi dan bagaimana optimalisasi ukuran file?',
+            answer: 'Ukuran build sekitar 80-100 MB. Saya optimasi dengan kompresi texture, stripping unused assets, dan setting build compression. Tapi masih bisa dikurangi lagi kalau pake asset bundle atau addressable assets.',
+            tags: ['build size', 'ukuran', 'kompresi', 'asset bundle']
+        }, {
+            id: 73,
+            category: 'kritis',
+            question: 'Bagaimana jika kecepatan pemain berubah-ubah (berhenti-jalan-lari) secara acak? Apakah FSM stabil?',
+            answer: 'Stabil, karena transisi dievaluasi tiap frame. Jadi perubahan kecepatan langsung dideteksi. Saya udah tes skenario acak dan hasilnya tetap 100% akurat. Nggak ada delay atau transisi yang salah.',
+            tags: ['kecepatan acak', 'stabilitas', 'transisi', '100%']
+        }, {
+            id: 74,
+            category: 'kritis',
+            question: 'Bagaimana FSM ini membandingkan efisiensi memori dibanding algoritma pathfinding lain?',
+            answer: 'FSM sendiri cuma butuh memory kecil karena cuma nyimpen state dan beberapa variabel. Sementara A* pathfinding butuh memory lebih besar buat node dan heuristic. Karena NavMesh udah handle pathfinding, FSM fokus ke perilaku, jadi efisiensi memori sangat baik.',
+            tags: ['efisiensi memori', 'A*', 'pathfinding', 'perbandingan']
+        }, {
+            id: 75,
+            category: 'kritis',
+            question: 'Pesan utama apa yang ingin disampaikan kepada audiens tentang potensi FSM di luar game?',
+            answer: 'FSM itu nggak cuma buat game. Bisa dipake di simulasi, robotika, sistem kontrol, dan aplikasi interaktif lainnya. Yang penting adalah kita bisa memodelkan perilaku jadi state-state yang jelas. Penelitian ini buktiin FSM efektif di NPC pemandu untuk simulasi kampus.',
+            tags: ['potensi', 'FSM', 'luar game', 'simulasi', 'robotika']
+        }];
+
+        // ============================================================
+        //  RENDER
+        // ============================================================
+        const searchInput = document.getElementById('searchInput');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const countDisplay = document.getElementById('countDisplay');
+        const totalDisplay = document.getElementById('totalDisplay');
+
+        let currentFilter = 'all';
+        let currentQuery = '';
+
+        function highlightText(text, query) {
+            if (!query || query.length < 2) return text;
+            const words = query.split(/\s+/).filter(w => w.length > 1);
+            let result = text;
+            words.forEach(word => {
+                const regex = new RegExp(`(${word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                result = result.replace(regex, '<span class="highlight">$1</span>');
+            });
+            return result;
+        }
+
+        function render() {
+            const query = currentQuery.toLowerCase().trim();
+            const filter = currentFilter;
+
+            let filtered = questions.filter(q => {
+                if (filter !== 'all' && q.category !== filter) return false;
+                if (query) {
+                    const searchable = (q.question + ' ' + q.answer + ' ' + q.tags.join(' ')).toLowerCase();
+                    return searchable.includes(query);
+                }
+                return true;
+            });
+
+            totalDisplay.textContent = questions.length;
+            countDisplay.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty">
+                        <div class="icon">🔍</div>
+                        <p>Tidak ditemukan hasil untuk <b>"${searchInput.value}"</b></p>
+                        <p style="font-size:0.8rem; margin-top:0.3rem;">Coba kata kunci lain, misal: <i>response time, sus, navmesh, fsm</i></p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach((q, index) => {
+                const qHighlight = highlightText(q.question, query);
+                const aHighlight = highlightText(q.answer, query);
+                const tagHtml = q.tags.map(t => `<span>${highlightText(t, query)}</span>`).join('');
+                const catLabel = {
+                    'latar': 'Latar Belakang',
+                    'metode': 'Metode & Teknis',
+                    'pengujian': 'Pengujian & Evaluasi',
+                    'hasil': 'Hasil & Kesimpulan',
+                    'kritis': 'Argumen Kritis',
+                    'pengembangan': 'Pengembangan'
+                } [q.category] || q.category;
+
+                html += `
+                    <div class="card">
+                        <div class="q">
+                            <span class="num">#${q.id}</span>
+                            <span>${qHighlight}</span>
+                        </div>
+                        <div class="a">${aHighlight}</div>
+                        <div class="tags">
+                            <span class="cat">${catLabel}</span>
+                            ${tagHtml}
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsContainer.innerHTML = html;
+        }
+
+        searchInput.addEventListener('input', () => {
+            currentQuery = searchInput.value;
+            render();
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                render();
+            });
+        });
+
+        render();
+    </script>
+
+</body>
+</html>
