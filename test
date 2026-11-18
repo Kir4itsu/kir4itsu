@@ -1,870 +1,468 @@
-import Geolocation from "@react-native-community/geolocation";
-import NetInfo from "@react-native-community/netinfo";
-import RNFS from "react-native-fs";
-import ImageResizer from "react-native-image-resizer";
-import { Platform, Image } from "react-native";
-import { getDataFromSQLiteEnc, updateDataFromSQLiteEnc } from "../../Helpers/utils";
-import { captureError } from "./captureError";
-import CommonService from "../../Services/Api/Common";
+import { expect } from "@playwright/test";
+import { When, Then } from "../../../fixture.spec";
+import { member } from "../../../../test_data/variables/member.variable";
+import { url } from "../../../../test_data/url";
+import { cart } from "../../../../test_data/variables/cart.variable";
+import { cashier_menu } from "../../../../test_data/variables/cashier.variable";
+import {
+  calculateDate21YearsAgo,
+  generateId,
+  generateRandomPhoneNumber,
+} from "../../../../../src/helpers/utils";
 
-export const CHECK_IN_STATUS = {
-  READY_FOR_BACKEND: "ready_for_backend",
-  EXCEPTION_MODE: "exception_mode",
-  GPS_DISABLED: "gps_disabled",
-  PERMISSION_DENIED: "permission_denied",
-  NO_CONFIG: "no_config",
-};
+type SpecialEventMember =
+  | "special event"
+  | "special event database"
+  | "survey limit"
+  | "special event monthly limit";
+type MemberCredential = { email: string; phone: string };
 
-const toRad = (deg) => deg * (Math.PI / 180);
+// XP balance and member captured before the survey, compared after submission.
+// Tests run with a single worker per feature, so module state is safe here.
+let xpBeforeSurvey = 0;
+let currentMember: MemberCredential = member.iqos.special_event;
 
-export const calculateHaversineDistance = (lat1, lon1, lat2, lon2) => {
-  const R = 6371000;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
+// A member can fill the survey only once per day, so each scenario registers
+// its own fresh IQOS member through the UI (per Surya's direction).
+const registeredMembers: Partial<Record<SpecialEventMember, MemberCredential>> =
+  {};
 
-export const getCheckInConfig = async (sqliteNextGen) => {
-  try {
-    if (!sqliteNextGen) return null;
-    const results = await getDataFromSQLiteEnc(
-      sqliteNextGen,
-      "SELECT * FROM checkin_config WHERE is_active = 1 LIMIT 1"
-    );
-    if (results.length > 0) {
-      const cfg = results[0];
-      let exceptionReasons = [];
-      try {
-        if (cfg.exception_reason) {
-          exceptionReasons = JSON.parse(cfg.exception_reason);
-        }
-      } catch (e) { }
-      const config = {
-        configId: cfg.id,
-        isActive: true,
-        maxAccuracy: parseFloat(cfg.max_accuracy_meter) || 20,
-        radiusTolerance: parseFloat(cfg.radius_tolerance_meter) || 50,
-        isActiveGpsCalibration: Number(cfg.gps_calibration_enabled) === 1,
-        timeoutGpsCalibration: parseFloat(cfg.gps_calibration_timeout_second) || 3,
-        evidenceMaxFileSize: parseFloat(cfg.evidence_max_file_size_kb) || 150,
-        exceptionReasons,
-        reasonGroupCode: String(cfg.reason_group_code ?? 221),
-        configVersion: cfg.id,
-      };
-      return config;
-    }
-    return null;
-  } catch (error) {
-    captureError(error, "getCheckInConfig");
-    return null;
-  }
-};
-
-const getPositionWithAccuracy = () => {
-  return new Promise((resolve, reject) => {
-    Geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude, accuracy } = position.coords;
-        resolve({
-          latitude: latitude.toFixed(6),
-          longitude: longitude.toFixed(6),
-          accuracy,
-          timestamp: position.timestamp,
-        });
-      },
-      (error) => reject(error),
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
-    );
-  });
-};
-
-export const requestLocationAccess = () => {
-  return new Promise((resolve) => {
-    Geolocation.requestAuthorization();
-
-    setTimeout(() => {
-      Geolocation.getCurrentPosition(
-        () => resolve('granted'),
-        (error) => {
-          if (error?.code === 2) resolve('disabled');
-          else resolve('denied');
-        },
-        { enableHighAccuracy: false, timeout: 60000, maximumAge: 0 }
-      );
-    }, 500);
-  });
-};
-
-const calibrateGPS = (maxAccuracy, timeoutSeconds = 3, onProgress) => {
-  const startTime = Date.now();
-  return new Promise((resolve) => {
-    let resolved = false;
-    let startAccuracy = null;
-    let bestAccuracy = null;
-    let bestLocation = null;
-
-    const tickerId = setInterval(() => {
-      if (resolved) return;
-      if (onProgress) {
-        onProgress({
-          currentAccuracy: bestAccuracy ?? startAccuracy ?? 0,
-          bestAccuracy: bestAccuracy ?? 0,
-          elapsed: (Date.now() - startTime) / 1000,
-        });
-      }
-    }, 100);
-
-    const timeoutId = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        clearInterval(tickerId);
-        resolve({
-          status: "timeout",
-          location: bestLocation,
-          startAccuracy,
-          finalAccuracy: bestAccuracy,
-          durationMs: Date.now() - startTime,
-        });
-      }
-    }, timeoutSeconds * 1000);
-
-    const attempt = () => {
-      if (resolved) return;
-      Geolocation.getCurrentPosition(
-        (position) => {
-          if (resolved) return;
-          let { latitude, longitude, accuracy } = position.coords;
-
-          if (startAccuracy === null) startAccuracy = accuracy;
-          if (bestAccuracy === null || accuracy < bestAccuracy) {
-            bestAccuracy = accuracy;
-            bestLocation = { latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) };
-          }
-
-          if (onProgress) {
-            onProgress({
-              currentAccuracy: accuracy,
-              bestAccuracy,
-              elapsed: (Date.now() - startTime) / 1000,
-            });
-          }
-
-          if (accuracy <= maxAccuracy) {
-            resolved = true;
-            clearTimeout(timeoutId);
-            clearInterval(tickerId);
-            resolve({
-              status: "success",
-              location: { latitude: latitude.toFixed(6), longitude: longitude.toFixed(6) },
-              startAccuracy,
-              finalAccuracy: accuracy,
-              durationMs: Date.now() - startTime,
-            });
-          } else {
-            setTimeout(attempt, 500);
-          }
-        },
-        () => {
-          if (!resolved) setTimeout(attempt, 500);
-        },
-        { enableHighAccuracy: true, timeout: 3000, maximumAge: 5000 }
-      );
-    };
-
-    attempt();
-  });
-};
-
-export const checkInternetAvailable = async () => {
-  try {
-    const netState = await NetInfo.refresh();
-    if (netState?.isConnected === true || netState?.isInternetReachable === true) {
-      return true;
-    }
-  } catch (e) { }
-
-  const ping = async (url) => {
-    const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('ping timeout')), 3000));
-    const res = await Promise.race([fetch(url, { method: 'HEAD' }), timeout]);
-    if (!res || res.status >= 400) throw new Error(`bad status ${res?.status}`);
-    return true;
-  };
-
-  for (const url of ['https://www.google.com/generate_204', 'https://www.cloudflare.com/cdn-cgi/trace']) {
-    try {
-      await ping(url);
-      return true;
-    } catch (err) { }
+function resolveMember(memberType: SpecialEventMember): MemberCredential {
+  if (registeredMembers[memberType]) {
+    return registeredMembers[memberType];
   }
 
-  return false;
-};
+  switch (memberType) {
+    case "special event database":
+      return member.iqos.special_event_db;
 
+    case "special event monthly limit":
+      return member.iqos.special_event;
 
-const normalizeFilePath = (uri) => {
-  let filePath = uri;
-  if (Platform.OS === 'ios' && filePath.startsWith('file://')) {
-    filePath = filePath.replace('file://', '');
+    default:
+      return member.iqos.special_event;
   }
-  return filePath;
-};
+}
 
-const getImageSize = (uri) => {
-  return new Promise((resolve) => {
-    Image.getSize(
-      uri,
-      (width, height) => resolve({ width, height }),
-      () => resolve({ width: 2000, height: 2000 })
-    );
-  });
-};
-
-export const convertPhotoToBase64 = async (uri, maxFileSizeKB) => {
-  try {
-    if (!uri) return null;
-
-    const originalPath = normalizeFilePath(uri);
-    const originalStat = await RNFS.stat(originalPath);
-    const originalSizeKB = originalStat.size / 1024;
-    if (originalSizeKB <= maxFileSizeKB) {
-      return await RNFS.readFile(originalPath, 'base64');
-    }
-
-    const { width: origW, height: origH } = await getImageSize(uri);
-
-    let smallestBase64 = null;
-    let smallestSizeKB = Infinity;
-
-    const render = async (w, h, quality) => {
-      const resized = await ImageResizer.createResizedImage(uri, w, h, 'JPEG', quality, 0);
-      const filePath = normalizeFilePath(resized.uri);
-      const base64 = await RNFS.readFile(filePath, 'base64');
-      const sizeKB = (base64.length * 0.75) / 1024;
-      if (sizeKB < smallestSizeKB) {
-        smallestSizeKB = sizeKB;
-        smallestBase64 = base64;
-      }
-      return { base64, sizeKB };
-    };
-    let w = origW;
-    let h = origH;
-    while (w >= 2 && h >= 2) {
-      const probe = await render(Math.round(w), Math.round(h), 1);
-
-      if (probe.sizeKB <= maxFileSizeKB) {
-        let low = 1;
-        let high = 100;
-        let bestBase64 = probe.base64;
-        let bestSizeKB = probe.sizeKB;
-
-        while (low <= high) {
-          const mid = Math.floor((low + high) / 2);
-          const { base64, sizeKB } = await render(Math.round(w), Math.round(h), mid);
-          if (sizeKB <= maxFileSizeKB) {
-            bestBase64 = base64;
-            bestSizeKB = sizeKB;
-            low = mid + 1;
-          } else {
-            high = mid - 1;
-          }
-        }
-
-        return bestBase64;
-      }
-      w = w * 0.5;
-      h = h * 0.5;
-    }
-    return smallestBase64;
-  } catch (error) {
-    captureError(error, 'convertPhotoToBase64');
-    return null;
-  }
-};
-
-const generateCorrelationId = () => {
-  const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).substring(2, 10);
-  return `${timestamp}-${random}`;
-};
-
-export const validateCheckIn = async ({ customerData, sqliteNextGen, onValidationProgress, onCalibrationStart, onCalibrationProgress, onCalibrationEnd }) => {
-  const correlationId = generateCorrelationId();
-
-  const reportProgress = (pct) => { if (onValidationProgress) onValidationProgress(pct); };
-  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-  reportProgress(10);
-
-  let config = null;
-
-  try {
-    config = await getCheckInConfig(sqliteNextGen);
-    if (!config || !config.isActive) {
-      console.log('[CheckIn] RESULT: NO_CONFIG');
-      return { status: CHECK_IN_STATUS.NO_CONFIG, payload: { reason: "config_not_available" } };
-    }
-    reportProgress(25);
-    await delay(400);
-
-    let position;
-    try {
-      position = await getPositionWithAccuracy();
-    } catch (err) {
-      console.log('[CheckIn] GPS error:', err?.code, err?.message);
-      if (err?.code === 1) return { status: CHECK_IN_STATUS.PERMISSION_DENIED, payload: {} };
-      if (err?.code === 2) return { status: CHECK_IN_STATUS.GPS_DISABLED, payload: {} };
-      try {
-        position = await getPositionWithAccuracy();
-      } catch (retryErr) {
-        if (retryErr?.code === 1) return { status: CHECK_IN_STATUS.PERMISSION_DENIED, payload: {} };
-        return { status: CHECK_IN_STATUS.GPS_DISABLED, payload: {} };
-      }
-    }
-    reportProgress(50);
-    await delay(400);
-
-    let finalAccuracy = position.accuracy;
-    let calibrationData = {
-      enabled: config.isActiveGpsCalibration,
-      duration: null,
-      timeout: config.timeoutGpsCalibration,
-      startAccuracy: null,
-      finalAccuracy: null,
-      outcome: "not_applicable",
-    };
-
-    reportProgress(65);
-    await delay(400);
-
-    if (position.accuracy > config.maxAccuracy) {
-      reportProgress(70);
-
-      if (!config.isActiveGpsCalibration) {
-        console.log('[CheckIn] RESULT: EXCEPTION_MODE (calibration disabled)');
-        calibrationData.outcome = "disabled";
-        return {
-          status: CHECK_IN_STATUS.EXCEPTION_MODE,
-          payload: {
-            correlationId,
-            configVersion: config.configVersion,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            gpsAccuracyMeter: position.accuracy,
-            calibrationData,
-            exceptionReasons: config.exceptionReasons || [],
-            reasonGroupCode: config.reasonGroupCode,
-            evidenceMaxFileSize: config.evidenceMaxFileSize,
-            reason: "accuracy_not_met",
-          },
-        };
-      }
-
-      if (!config.timeoutGpsCalibration || config.timeoutGpsCalibration <= 0) {
-        console.log('[CheckIn] RESULT: EXCEPTION_MODE (calibration timeout invalid)');
-        calibrationData.outcome = "timeout";
-        calibrationData.duration = 0;
-        return {
-          status: CHECK_IN_STATUS.EXCEPTION_MODE,
-          payload: {
-            correlationId,
-            configVersion: config.configVersion,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            gpsAccuracyMeter: position.accuracy,
-            calibrationData,
-            exceptionReasons: config.exceptionReasons || [],
-            reasonGroupCode: config.reasonGroupCode,
-            evidenceMaxFileSize: config.evidenceMaxFileSize,
-            reason: "calibration_timeout",
-          },
-        };
-      }
-
-      if (onCalibrationStart) onCalibrationStart(config);
-
-      const calResult = await calibrateGPS(config.maxAccuracy, config.timeoutGpsCalibration, onCalibrationProgress);
-
-      if (onCalibrationEnd) onCalibrationEnd(calResult);
-
-      calibrationData.duration = calResult.durationMs;
-      calibrationData.startAccuracy = calResult.startAccuracy || position.accuracy;
-      calibrationData.finalAccuracy = calResult.finalAccuracy || position.accuracy;
-      if (calResult.location) {
-        position = {
-          ...position,
-          latitude: calResult.location.latitude,
-          longitude: calResult.location.longitude,
-        };
-      }
-      position = { ...position, accuracy: calibrationData.finalAccuracy };
-      finalAccuracy = calibrationData.finalAccuracy;
-      
-      if (finalAccuracy <= config.maxAccuracy) {
-        calibrationData.outcome = "success";
-      } else {
-        console.log('[CheckIn] RESULT: EXCEPTION_MODE (calibration best still out of range)');
-        calibrationData.outcome = "timeout";
-        return {
-          status: CHECK_IN_STATUS.EXCEPTION_MODE,
-          payload: {
-            correlationId,
-            configVersion: config.configVersion,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            gpsAccuracyMeter: calibrationData.finalAccuracy,
-            calibrationData,
-            exceptionReasons: config.exceptionReasons || [],
-            reasonGroupCode: config.reasonGroupCode,
-            evidenceMaxFileSize: config.evidenceMaxFileSize,
-            reason: "calibration_timeout",
-          },
-        };
-      }
-    }
-
-    reportProgress(80);
-    await delay(400);
-    const custLat = parseFloat(customerData.geographical_x);
-    const custLon = parseFloat(customerData.geographical_y);
-    let preCheckDistance = null;
-
-    const hasValidOutletCoords = custLat && custLon && !isNaN(custLat) && !isNaN(custLon);
-
-    if (!hasValidOutletCoords) {
-      console.log('[CheckIn] RESULT: EXCEPTION_MODE (outlet has no coordinates)');
-      return {
-        status: CHECK_IN_STATUS.EXCEPTION_MODE,
-        payload: {
-          correlationId,
-          configVersion: config.configVersion,
-          latitude: position.latitude,
-          longitude: position.longitude,
-          gpsAccuracyMeter: finalAccuracy,
-          radiusUsed: config.radiusTolerance,
-          calibrationData,
-          preCheckDistance: null,
-          exceptionReasons: config.exceptionReasons || [],
-          reasonGroupCode: config.reasonGroupCode,
-          evidenceMaxFileSize: config.evidenceMaxFileSize,
-          reason: "outlet_no_coordinates",
-        },
-      };
-    }
-
-    if (hasValidOutletCoords) {
-      preCheckDistance = Math.round(
-        calculateHaversineDistance(
-          parseFloat(position.latitude),
-          parseFloat(position.longitude),
-          custLat,
-          custLon
-        )
-      );
-
-      if (preCheckDistance > config.radiusTolerance) {
-        console.log('[CheckIn] RESULT: EXCEPTION_MODE (out of radius)');
-        return {
-          status: CHECK_IN_STATUS.EXCEPTION_MODE,
-          payload: {
-            correlationId,
-            configVersion: config.configVersion,
-            latitude: position.latitude,
-            longitude: position.longitude,
-            gpsAccuracyMeter: finalAccuracy,
-            radiusUsed: config.radiusTolerance,
-            calibrationData,
-            preCheckDistance,
-            exceptionReasons: config.exceptionReasons || [],
-            reasonGroupCode: config.reasonGroupCode,
-            evidenceMaxFileSize: config.evidenceMaxFileSize,
-            reason: "out_of_radius",
-          },
-        };
-      }
-    }
-
-    reportProgress(100);
-    console.log('[CheckIn] RESULT: READY_FOR_BACKEND');
-    return {
-      status: CHECK_IN_STATUS.READY_FOR_BACKEND,
-      payload: {
-        correlationId,
-        configVersion: config.configVersion,
-        latitude: position.latitude,
-        longitude: position.longitude,
-        gpsAccuracyMeter: finalAccuracy,
-        radiusUsed: config.radiusTolerance,
-        calibrationData,
-        preCheckDistance,
-      },
-    };
-  } catch (error) {
-    captureError(error, "validateCheckIn");
-    console.log('[CheckIn] RESULT: UNEXPECTED_ERROR → exception mode');
-    return {
-      status: CHECK_IN_STATUS.EXCEPTION_MODE,
-      payload: {
-        reason: "unexpected_error",
-        correlationId,
-        configVersion: config?.configVersion,
-        exceptionReasons: config?.exceptionReasons || [],
-        reasonGroupCode: config?.reasonGroupCode,
-        evidenceMaxFileSize: config?.evidenceMaxFileSize,
-      },
-    };
-  }
-};
-
-export const checkGPSStatus = () => {
-  return new Promise((resolve) => {
-    let resolved = false;
-    const fallback = setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        resolve({ enabled: false, permissionGranted: false });
-      }
-    }, 3000);
-
-    Geolocation.getCurrentPosition(
-      () => {
-        if (!resolved) {
-          resolved = true;
-          clearTimeout(fallback);
-          resolve({ enabled: true, permissionGranted: true });
-        }
-      },
-      (error) => {
-        if (!resolved) {
-          resolved = true;
-          clearTimeout(fallback);
-          if (error.code === 1) resolve({ enabled: true, permissionGranted: false });
-          else if (error.code === 2) resolve({ enabled: false, permissionGranted: true });
-          else resolve({ enabled: false, permissionGranted: false });
-        }
-      },
-      { enableHighAccuracy: false, timeout: 3000, maximumAge: 60000 }
-    );
-  });
-};
-
-export const checkGPSStatusStrict = () => {
-  return new Promise((resolve) => {
-    Geolocation.getCurrentPosition(
-      () => resolve({ enabled: true, permissionGranted: true }),
-      (error) => {
-        if (error.code === 1) resolve({ enabled: true, permissionGranted: false });
-        else if (error.code === 2) resolve({ enabled: false, permissionGranted: true });
-        else resolve({ enabled: false, permissionGranted: false });
-      },
-      { enableHighAccuracy: false, timeout: 3000, maximumAge: 30000 }
-    );
-  });
-};
-
-const toNumberOrNull = (value) => {
-  if (value === null || value === undefined || value === '') return null;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : null;
-};
-
-export const saveCheckinToSQLite = async (sqliteNextGen, data) => {
-  try {
-    const query = `
-      INSERT INTO checkin_attempts (
-        idempotency_key, salesman_id, username, territory_code, journey_code,
-        visit_code, customer_code, config_id, latitude, longitude,
-        gps_accuracy_meter, outlet_latitude, outlet_longitude, calculated_distance_meter,
-        calibration_performed, pre_calibration_accuracy, post_calibration_accuracy,
-        client_status, reason_code, evidence_type, evidence_base64, device_timestamp, synced
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0)
-    `;
-    const args = [
-      data.idempotency_key,
-      data.salesman_id || '',
-      data.username || '',
-      data.territory_code || '',
-      data.journey_code || '',
-      data.visit_code || '',
-      data.customer_code,
-      data.config_id ? String(data.config_id) : null,
-      toNumberOrNull(data.latitude) ?? 0,
-      toNumberOrNull(data.longitude) ?? 0,
-      toNumberOrNull(data.gps_accuracy_meter) ?? 0,
-      toNumberOrNull(data.outlet_latitude),
-      toNumberOrNull(data.outlet_longitude),
-      toNumberOrNull(data.calculated_distance_meter),
-      data.calibration_performed ? 1 : 0,
-      toNumberOrNull(data.pre_calibration_accuracy),
-      toNumberOrNull(data.post_calibration_accuracy),
-      data.client_status,
-      data.reason_code ? String(data.reason_code) : null,
-      data.evidence_type ? String(data.evidence_type) : null,
-      data.evidence_base64 || null,
-      data.device_timestamp || new Date().toISOString(),
-    ];
-    await updateDataFromSQLiteEnc(sqliteNextGen, query, args);
-    console.log('[CheckIn] Checkin saved | key:', data.idempotency_key, '| status:', data.client_status);
-  } catch (error) {
-    captureError(error, 'saveCheckinToSQLite');
-    console.log('[CheckIn] Failed to save checkin:', error?.message);
-  }
-};
-
-export const saveCheckoutToSQLite = async (sqliteNextGen, data) => {
-  try {
-    const nowIso = new Date().toISOString();
-    const query = `
-      UPDATE checkin_attempts SET
-        checkout_latitude = ?,
-        checkout_longitude = ?,
-        checkout_accuracy_meter = ?,
-        visit_duration_seconds = ?,
-        checkout_at = ?,
-        device_timestamp = ?,
-        updated_at = ?
-      WHERE idempotency_key = ?
-    `;
-    const args = [
-      toNumberOrNull(data.checkout_latitude),
-      toNumberOrNull(data.checkout_longitude),
-      toNumberOrNull(data.checkout_accuracy_meter),
-      toNumberOrNull(data.visit_duration_seconds) ?? 0,
-      data.checkout_at || nowIso,
-      data.device_timestamp || nowIso,
-      nowIso,
-      data.idempotency_key,
-    ];
-    await updateDataFromSQLiteEnc(sqliteNextGen, query, args);
-    console.log('[CheckIn] Checkout saved | key:', data.idempotency_key);
-  } catch (error) {
-    captureError(error, 'saveCheckoutToSQLite');
-    console.log('[CheckIn] Failed to save checkout:', error?.message);
-  }
-};
-
-export const getUnsyncedCheckins = async (sqliteNextGen) => {
-  try {
-    const results = await getDataFromSQLiteEnc(
-      sqliteNextGen,
-      `SELECT * FROM checkin_attempts WHERE synced = 0 ORDER BY created_at ASC`
-    );
-    return results;
-  } catch (error) {
-    captureError(error, 'getUnsyncedCheckins');
-    return [];
-  }
-};
-
-export const markCheckinsAsSynced = async (sqliteNextGen, idempotencyKeys) => {
-  try {
-    if (!idempotencyKeys || idempotencyKeys.length === 0) return;
-    const placeholders = idempotencyKeys.map(() => '?').join(',');
-    const query = `UPDATE checkin_attempts SET synced = 1, updated_at = ? WHERE idempotency_key IN (${placeholders})`;
-    await updateDataFromSQLiteEnc(sqliteNextGen, query, [new Date().toISOString(), ...idempotencyKeys]);
-  } catch (error) {
-    captureError(error, 'markCheckinsAsSynced');
-  }
-};
-
-export const syncSingleCheckin = async (sqliteNextGen, idempotencyKey) => {
-  try {
-    const records = await getDataFromSQLiteEnc(
-      sqliteNextGen,
-      `SELECT * FROM checkin_attempts WHERE idempotency_key = ? AND synced = 0 LIMIT 1`,
-      [idempotencyKey]
-    );
-
-    if (!records || records.length === 0) {
-      return { success: false, reason: 'no_record' };
-    }
-
-    const record = records[0];
-
-    const checkinPayload = {
-      idempotency_key: record.idempotency_key,
-      config_id: parseInt(record.config_id) || null,
-      customer_code: record.customer_code,
-      territory_code: record.territory_code || null,
-      journey_code: record.journey_code || null,
-      visit_code: record.visit_code || null,
-      latitude: parseFloat(record.latitude),
-      longitude: parseFloat(record.longitude),
-      gps_accuracy_meter: parseFloat(record.gps_accuracy_meter) || 0,
-      calibration_performed: (record.calibration_performed === 1 || record.calibration_performed === true),
-      pre_calibration_accuracy: record.pre_calibration_accuracy ? parseFloat(record.pre_calibration_accuracy) : null,
-      post_calibration_accuracy: record.post_calibration_accuracy ? parseFloat(record.post_calibration_accuracy) : null,
-      device_timestamp: record.device_timestamp,
-      client_status: record.client_status,
-      reason_code: record.reason_code || null,
-      evidence_type: record.evidence_type || null,
-      evidence_base64: record.evidence_base64 || null,
-    };
-
-    await CommonService.postCheckinSubmit({ checkins: [checkinPayload] });
-
-    if (record.checkout_at) {
-      const checkoutPayload = {
-        idempotency_key: record.idempotency_key,
-        latitude: parseFloat(record.checkout_latitude) || 0,
-        longitude: parseFloat(record.checkout_longitude) || 0,
-        accuracy_meter: parseFloat(record.checkout_accuracy_meter) || 0,
-        visit_duration_seconds: parseInt(record.visit_duration_seconds) || 0,
-      };
-
-      await CommonService.postCheckinCheckout({ checkouts: [checkoutPayload] });
-    }
-
-    const checkoutSyncedValue = record.checkout_at ? 1 : 0;
-    await updateDataFromSQLiteEnc(
-      sqliteNextGen,
-      `UPDATE checkin_attempts SET synced = 1, checkout_synced = ?, updated_at = ? WHERE idempotency_key = ?`,
-      [checkoutSyncedValue, new Date().toISOString(), idempotencyKey]
-    );
-    console.log('[CheckIn Sync] Record synced | key:', idempotencyKey);
-    return { success: true };
-  } catch (error) {
-    try {
-      const errMsg = error?.response?.data?.message || error?.message || JSON.stringify(error) || 'Unknown error';
-      await updateDataFromSQLiteEnc(
-        sqliteNextGen,
-        `UPDATE checkin_attempts SET sync_error = ?, updated_at = ? WHERE idempotency_key = ?`,
-        [errMsg, new Date().toISOString(), idempotencyKey]
-      );
-    } catch (_) {}
-    captureError(error, 'syncSingleCheckin');
-    console.log('[CheckIn Sync] Upload failed | key:', idempotencyKey, '| message:', error?.message, '| status:', error?.response?.status);
-    return { success: false, reason: 'api_error', error };
-  }
-};
-
-export const syncAllUnsyncedCheckins = async (sqliteNextGen) => {
-  try {
-    const unsyncedRecords = await getUnsyncedCheckins(sqliteNextGen);
-    let synced = 0;
-    let failed = 0;
-
-    for (const record of (unsyncedRecords || [])) {
-      const result = await syncSingleCheckin(sqliteNextGen, record.idempotency_key);
-      if (result.success) {
-        synced++;
-      } else {
-        failed++;
-      }
-    }
-
-    const pendingCheckouts = await getDataFromSQLiteEnc(
-      sqliteNextGen,
-      `SELECT * FROM checkin_attempts WHERE synced = 1 AND checkout_at IS NOT NULL AND checkout_synced = 0 ORDER BY created_at ASC`
-    ).catch(() => []);
-
-    for (const record of (pendingCheckouts || [])) {
-      try {
-        const checkoutPayload = {
-          idempotency_key: record.idempotency_key,
-          latitude: parseFloat(record.checkout_latitude) || 0,
-          longitude: parseFloat(record.checkout_longitude) || 0,
-          accuracy_meter: parseFloat(record.checkout_accuracy_meter) || 0,
-          visit_duration_seconds: parseInt(record.visit_duration_seconds) || 0,
-        };
-        await CommonService.postCheckinCheckout({ checkouts: [checkoutPayload] });
-        await updateDataFromSQLiteEnc(
-          sqliteNextGen,
-          `UPDATE checkin_attempts SET checkout_synced = 1, updated_at = ? WHERE idempotency_key = ?`,
-          [new Date().toISOString(), record.idempotency_key]
+    When(
+      "User prepares an existing IQOS member for monthly limit test",
+      async function ({ page, cashierPage, iqosXpPage }) {
+        currentMember = resolveMember(
+          "special event monthly limit",
         );
-        synced++;
-      } catch (err) {
-        failed++;
+
+        console.log(
+          `[MONTHLY LIMIT] Using existing member: ${currentMember.email} / ${currentMember.phone}`,
+        );
+
+        await page.goto(`${url.base_url}kasir`, {
+          waitUntil: "domcontentloaded",
+        });
+
+        await page.waitForURL(/\/kasir/, {
+          timeout: 30000,
+        });
+
+        await cashierPage.partnerProgramButton.waitFor({
+          state: "visible",
+          timeout: 30000,
+        });
+
+        await cashierPage.partnerProgramButton.click();
+
+        await page.waitForTimeout(1000);
+        await page.reload();
+        await page.waitForTimeout(5000);
+
+        await iqosXpPage.openMemberSearchForm();
+        await searchCurrentMember(iqosXpPage);
+
+        xpBeforeSurvey = await iqosXpPage.getMemberXp();
+
+        console.log(
+          `[MONTHLY LIMIT] XP before survey: ${xpBeforeSurvey}`,
+        );
+      },
+    );
+
+When(
+  "User registers a new IQOS member for {string}",
+  async function (
+    { page, cashierPage, cartPage, memberPage },
+    memberType: SpecialEventMember,
+  ) {
+    // Start from a clean Kasir page so leftover dialogs don't block the cart.
+    // Explicitly wait for page URL and product search to be ready after any prior page.reload().
+    await page.goto(`${url.base_url}kasir`, { waitUntil: "domcontentloaded" });
+    await page.waitForURL(/\/kasir/, { timeout: 30000 });
+    
+    const isMonthlyLimit = memberType === "special event monthly limit";
+    // Quick check if product already in cart (no timeout). If not, add it.
+    if (!(await cashierPage.continueToTransactionButton.isVisible())) {
+      await cashierPage.addSFPProductToCart();
+    }
+    await cashierPage.openCart();
+    await memberPage.clickRegisterNewAccount();
+
+    // "test..." emails are rejected by the survey as non-permanent
+    // ("gunakan email permanen"), so use a plain name-style address.
+    const id = generateId().replace(/\D/g, "");
+    const newMember = {
+      name: `Special Event ${id}`,
+      email: `specialevent.qa${id}@sampoerna.com`,
+      phone: generateRandomPhoneNumber(),
+      gender: "male" as const,
+      dateOfBirth: calculateDate21YearsAgo(),
+      smokerStatus: "Non-Perokok",
+    };
+    await memberPage.fillAllRequiredFields(newMember, "Bebas Asap");
+    // The IQOS edit button only shows once the member is saved to the cart.
+    await cartPage.editIQOSButton.waitFor({ state: "visible", timeout: 15000 });
+    // The member only exists after the transaction is completed.
+    // backToHome=true (default): go back to home after first transaction.
+    await cartPage.completeTransactionForNewMember(
+      cart.codentify.valid,
+      cart.approval_code.valid,
+      true, // return to home
+    );
+    if (isMonthlyLimit) xpBeforeSurvey = 0; // brand new member
+
+    registeredMembers[memberType] = {
+      email: newMember.email,
+      phone: newMember.phone,
+    };
+    // No separate search step in the cart flow; the XP check uses this member.
+    if (isMonthlyLimit) currentMember = registeredMembers[memberType];
+    console.log(
+      `[SPECIAL EVENT] Registered new member for "${memberType}": ${newMember.email} / ${newMember.phone}`,
+    );
+  },
+);
+
+async function searchCurrentMember(iqosXpPage) {
+  await iqosXpPage.searchAndSubmit(currentMember.email, currentMember.phone);
+}
+
+When(
+  "User searches the {string} member and records the current XP",
+  async function ({ iqosXpPage }, memberType: SpecialEventMember) {
+    currentMember = resolveMember(memberType);
+    // Partner Program may reopen the previous scenario's member page.
+    await iqosXpPage.openMemberSearchForm();
+    await searchCurrentMember(iqosXpPage);
+    xpBeforeSurvey = await iqosXpPage.getMemberXp();
+    console.log(`[SPECIAL EVENT] XP before survey: ${xpBeforeSurvey}`);
+  },
+);
+
+// Survey from the Partner Program menu always offers +1 XP.
+When(
+  "User completes the survey and chooses XP points",
+  async function ({ iqosXpPage }) {
+    // QA intermittently drops the survey request and shows "Koneksi Internet
+    // Terputus"; the XP is then not granted. Dismiss it and retry the survey.
+    const MAX_ATTEMPTS = 3;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        await completeSurveyOnce(iqosXpPage);
+      } catch (error) {
+        if (
+          attempt === MAX_ATTEMPTS ||
+          !(await iqosXpPage.dismissConnectionLostIfVisible())
+        ) {
+          throw error;
+        }
+        console.log(`[SURVEY] Attempt ${attempt} hit a connection error, retrying`);
+        continue;
+      }
+      // The popup can also show right after the final confirm.
+      if (!(await iqosXpPage.dismissConnectionLostIfVisible())) return;
+      if (attempt === MAX_ATTEMPTS) {
+        throw new Error("Survey kept failing with 'Koneksi Internet Terputus'");
+      }
+      console.log(`[SURVEY] Attempt ${attempt} ended with a connection error, retrying`);
+    }
+  },
+);
+
+// The success screen offers "Lanjutkan Survey" only for an existing member
+// searched in the cart (not for a member registered in the same order), so
+// the Rp 1.000.000 order is a second transaction for the registered member.
+When(
+  "User buys IQOS Test Iluma for the {string} member through the cart",
+  async function (
+    { page, cashierPage, cartPage },
+    memberType: SpecialEventMember,
+  ) {
+    currentMember = resolveMember(memberType);
+    await page.goto(`${url.base_url}kasir`, { waitUntil: "domcontentloaded" });
+    if (await cashierPage.continueToTransactionButton.isVisible()) {
+      await cartPage.removeAllProductsFromCart();
+    }
+    await cashierPage.addProductToCartByName(
+      cashier_menu.search_product.sfp.iqos_test_iluma,
+    );
+    await cashierPage.openCart();
+    for (const index of [0, 1]) {
+      if (await cartPage.scanCodentifyButton(index).isVisible().catch(() => false)) {
+        await cartPage.fillCodentify(cart.codentify.valid, index);
       }
     }
+    await cartPage.fillMemberData(currentMember.email, currentMember.phone);
+    await cartPage.selectPreviousCigaretteBrandIfShown();
+    await cartPage.fillApprovalCode(cart.approval_code.valid);
+    await cartPage.toggleHavButtonWithRetry();
+    await cartPage.completeTransactionButton.click();
+    // Stay on the success screen so the survey can be continued from there.
+    await cartPage.backToHomeButton.waitFor({ state: "visible", timeout: 60000 });
+  },
+);
 
-    console.log(`[CheckIn Sync] Full sync done | synced=${synced} failed=${failed}`);
-    return { success: true, synced, failed };
-  } catch (error) {
-    captureError(error, 'syncAllUnsyncedCheckins');
-    console.log('[CheckIn Sync] Full sync error:', error?.message);
-    return { success: false, synced: 0, failed: 0, error };
-  }
-};
+// Survey from the order success screen ("Lanjutkan Survey"): this is where the
+// special event bonus (+200 XP) is offered.
+When(
+  "User continues the survey from the order success screen and chooses XP points",
+  async function ({ cartPage, iqosXpPage }) {
+    await completeSurveyFromCartCheckout(cartPage, iqosXpPage);
+    if (await iqosXpPage.dismissConnectionLostIfVisible()) {
+      throw new Error("Survey failed with 'Koneksi Internet Terputus', rerun");
+    }
+  },
+);
 
-export const handlePostCheckoutSync = async (sqliteNextGen, idempotencyKey) => {
+/**
+ * Complete survey from the cart checkout flow.
+ * The success modal appears after checkout with "Lanjutkan Survey" button.
+ * This flow grants the special event bonus (+200 XP).
+ */
+async function completeSurveyFromCartCheckout(cartPage, iqosXpPage) {
+  // Click "Lanjutkan Survey" button on the order success modal
+  const page = iqosXpPage.page;
   try {
-    const isOnline = await checkInternetAvailable();
-    console.log('[CheckIn Sync] Post-checkout sync | internet:', isOnline ? 'ONLINE' : 'OFFLINE');
-
-    if (!isOnline) {
-      return { uploaded: false, mode: 'pending_full_sync' };
-    }
-
-    const records = await getDataFromSQLiteEnc(
-      sqliteNextGen,
-      `SELECT * FROM checkin_attempts WHERE idempotency_key = ? LIMIT 1`,
-      [idempotencyKey]
-    );
-
-    if (!records || records.length === 0) {
-      return { uploaded: false, mode: 'no_record' };
-    }
-
-    const record = records[0];
-
-    if (!record.checkout_at) {
-      return { uploaded: false, mode: 'no_checkout_data' };
-    }
-
-    if (record.synced === 0 || record.synced === '0') {
-      const result = await syncSingleCheckin(sqliteNextGen, idempotencyKey);
-      return { uploaded: result.success, mode: 'full_sync' };
-    }
-
-    const checkoutPayload = {
-      idempotency_key: record.idempotency_key,
-      latitude: parseFloat(record.checkout_latitude) || 0,
-      longitude: parseFloat(record.checkout_longitude) || 0,
-      accuracy_meter: parseFloat(record.checkout_accuracy_meter) || 0,
-      visit_duration_seconds: parseInt(record.visit_duration_seconds) || 0,
-    };
-
-    await CommonService.postCheckinCheckout({ checkouts: [checkoutPayload] });
-
-    await updateDataFromSQLiteEnc(
-      sqliteNextGen,
-      `UPDATE checkin_attempts SET checkout_synced = 1, updated_at = ? WHERE idempotency_key = ?`,
-      [new Date().toISOString(), idempotencyKey]
-    );
-
-    return { uploaded: true, mode: 'checkout_only' };
+    await cartPage.continueSurveyButton.waitFor({
+      state: "visible",
+      timeout: 30000,
+    });
   } catch (error) {
-    captureError(error, 'handlePostCheckoutSync');
-    console.log('[CheckIn Sync] Post-checkout sync failed (will retry):', error?.message);
-    return { uploaded: false, mode: 'pending_full_sync' };
+    // Debug aid: show what the success screen offers instead.
+    const buttons = await page
+      .locator("button:visible, [id^='order-success-modal']")
+      .evaluateAll((els) =>
+        els.map((el) => `${el.id || "-"} | ${(el.textContent || "").trim()}`),
+      )
+      .catch(() => []);
+    console.log(`[SURVEY][DEBUG] URL: ${page.url()}`);
+    console.log(`[SURVEY][DEBUG] Visible buttons:\n  ${buttons.join("\n  ")}`);
+    await page.screenshot({ path: "reports/cde-79943-success-screen.png" });
+    throw error;
   }
-};
+  await cartPage.continueSurveyButton.click();
+  await iqosXpPage.page.waitForTimeout(2000);
 
+  // The survey question is randomized: it can be the Angular star-rating
+  // dialog inside the Kasir iframe, or the Radix dialog on the page.
+  const starSurvey = iqosXpPage.surveyStarRating.first();
 
-export const handlePostCheckinSync = async (sqliteNextGen, idempotencyKey) => {
-  try {
-    const isOnline = await checkInternetAvailable();
-    console.log('[CheckIn Sync] Post-checkin sync | internet:', isOnline ? 'ONLINE' : 'OFFLINE');
+  console.log(
+    "[DEBUG] survey title visible:",
+    await iqosXpPage.radixSurveyTitle.isVisible().catch(() => false),
+  );
 
-    if (!isOnline) {
-      return { uploaded: false, mode: 'pending_full_sync' };
-    }
+  console.log(
+    "[DEBUG] radix dialog visible:",
+    await iqosXpPage.radixSurveyDialog.isVisible().catch(() => false),
+  );
 
-    const result = await syncSingleCheckin(sqliteNextGen, idempotencyKey);
+  console.log(
+    "[DEBUG] star survey visible:",
+    await starSurvey.isVisible().catch(() => false),
+  );
 
-    if (result.success) {
-      syncAllUnsyncedCheckins(sqliteNextGen).catch(() => {});
-    }
+  await expect
+    .poll(
+      async () => {
+        const surveyTitleVisible =
+          await iqosXpPage.radixSurveyTitle
+            .isVisible()
+            .catch(() => false);
 
-    return { uploaded: result.success, mode: 'immediate' };
-  } catch (error) {
-    captureError(error, 'handlePostCheckinSync');
-    console.log('[CheckIn Sync] Post-checkin sync failed (will retry):', error?.message);
-    return { uploaded: false, mode: 'pending_full_sync' };
+        const starVisible =
+          await starSurvey
+            .isVisible()
+            .catch(() => false);
+
+        const limitVisible =
+          await iqosXpPage.surveyLimitToast
+            .isVisible()
+            .catch(() => false);
+
+        if (limitVisible) {
+          console.log(
+            "[DEBUG] Survey limit reached",
+          );
+        }
+
+        return (
+          surveyTitleVisible ||
+          starVisible ||
+          limitVisible
+        );
+      },
+      {
+        timeout: 15000,
+      },
+    )
+    .toBe(true);
+
+  if (await iqosXpPage.surveyLimitToast.isVisible().catch(() => false)) {
+    console.log("[SURVEY] Limit toast shown");
+    return;
   }
-};
+
+  if (
+    await iqosXpPage.radixSurveyTitle
+      .isVisible()
+      .catch(() => false)
+  ) {
+    await iqosXpPage.completeSurveySeveralQuestion();
+  } else if (
+    await starSurvey.isVisible().catch(() => false)
+  ) {
+    await iqosXpPage.completeSurveyStarRating();
+  } else {
+    throw new Error(
+      "Survey modal appeared but automation could not identify survey type",
+    );
+  }
+}
+
+async function completeSurveyOnce(iqosXpPage) {
+  await iqosXpPage.clickSurveyButton();
+  // The survey question is randomized: it can be the Angular star-rating
+  // dialog inside the Kasir iframe, or the Radix dialog on the page.
+  const starSurvey = iqosXpPage.surveyStarRating.first();
+  await expect(
+    starSurvey
+      .or(iqosXpPage.radixSurveyDialog)
+      .or(iqosXpPage.surveyLimitToast),
+  ).toBeVisible({ timeout: 15000 });
+  if (await iqosXpPage.surveyLimitToast.isVisible().catch(() => false)) {
+    // A previous attempt was actually saved before the connection dropped.
+    console.log("[SURVEY] Limit toast shown, the earlier attempt was saved");
+    return;
+  }
+  if (await starSurvey.isVisible()) {
+    // Star rating -> consents -> Lanjutkan -> Poin -> confirm -> Ke Menu IQOS XP
+    await iqosXpPage.completeSurveyStarRating();
+  } else {
+    // Answers every radio group and textarea, then picks "Poin" and confirms.
+    await iqosXpPage.completeSurveySeveralQuestion();
+  }
+}
+
+Then(
+  "Member XP should be higher than before the survey",
+  async function ({ iqosXpPage }) {
+    // "Ke Menu IQOS XP" may land on the search form or on the member page.
+    await iqosXpPage.page.waitForTimeout(3000);
+    if (await iqosXpPage.emailField.isVisible().catch(() => false)) {
+      await searchCurrentMember(iqosXpPage);
+    }
+    const xpAfter = await iqosXpPage.getMemberXp();
+    console.log(
+      `[SPECIAL EVENT] XP before: ${xpBeforeSurvey}, after: ${xpAfter}`,
+    );
+    expect(xpAfter).toBeGreaterThan(xpBeforeSurvey);
+  },
+);
+
+Then(
+  "Member XP should be capped at the monthly limit of {int} XP out of {int} XP",
+  async function (
+    { page, cashierPage, iqosXpPage },
+    monthlyLimit: number,
+    fullReward: number,
+  ) {
+    // Read XP from a fresh load so it reflects what the backend saved.
+    await reopenCurrentMember(page, cashierPage, iqosXpPage);
+    const xpAfter = await iqosXpPage.getMemberXp();
+    const xpGained = xpAfter - xpBeforeSurvey;
+    console.log(
+      `[MONTHLY LIMIT] XP before: ${xpBeforeSurvey}, after: ${xpAfter}, gained: ${xpGained} (full reward ${fullReward}, limit ${monthlyLimit})`,
+    );
+    // Partial: the member got points, but only up to the limit, not the full reward.
+    expect(xpGained).toBeGreaterThan(0);
+    expect(xpGained).toBeLessThan(fullReward);
+    expect(xpAfter).toBe(monthlyLimit);
+  },
+);
+
+/**
+ * Reopen Partner Program from a fresh page load so the XP shown comes from the
+ * backend, not client state (same navigation as CDE-71312), then open the
+ * current member's page.
+ */
+async function reopenCurrentMember(page, cashierPage, iqosXpPage) {
+  await page.goto(`${url.base_url}kasir`, { waitUntil: "domcontentloaded" });
+  await page.waitForURL(/kasir/, { timeout: 30000 });
+  await cashierPage.partnerProgramButton.waitFor({
+    state: "visible",
+    timeout: 30000,
+  });
+  await cashierPage.partnerProgramButton.click();
+  await page.waitForTimeout(1000);
+  await page.reload();
+  await page.waitForTimeout(5000);
+  // After reload the app may restore the last member page directly.
+  if (await iqosXpPage.emailField.isVisible().catch(() => false)) {
+    await searchCurrentMember(iqosXpPage);
+  }
+}
+
+// XP right after the first (accepted) survey, for CDE-79944.
+let xpAfterFirstSurvey = 0;
+
+When(
+  "User opens the survey again for the same member",
+  async function ({ page, cashierPage, iqosXpPage }) {
+    await reopenCurrentMember(page, cashierPage, iqosXpPage);
+    xpAfterFirstSurvey = await iqosXpPage.getMemberXp();
+    console.log(
+      `[SURVEY LIMIT] XP before survey: ${xpBeforeSurvey}, after first survey: ${xpAfterFirstSurvey}`,
+    );
+    await iqosXpPage.clickSurveyButton();
+  },
+);
+
+Then(
+  "System rejects the survey with the survey limit message",
+  async function ({ iqosXpPage }) {
+    // First survey was accepted, so the member really is at the limit now.
+    expect(xpAfterFirstSurvey).toBeGreaterThan(xpBeforeSurvey);
+    await iqosXpPage.verifySurveyLimitError();
+  },
+);
+
+Then(
+  "Member XP should not change after the rejected survey",
+  async function ({ page, cashierPage, iqosXpPage }) {
+    await reopenCurrentMember(page, cashierPage, iqosXpPage);
+    const xpNow = await iqosXpPage.getMemberXp();
+    console.log(
+      `[SURVEY LIMIT] XP after first survey: ${xpAfterFirstSurvey}, after rejected survey: ${xpNow}`,
+    );
+    expect(xpNow).toBe(xpAfterFirstSurvey);
+  },
+);
+
+Then(
+  "Member XP should still be higher than before after reloading the page",
+  async function ({ page, cashierPage, iqosXpPage }) {
+    await reopenCurrentMember(page, cashierPage, iqosXpPage);
+    const xpAfter = await iqosXpPage.getMemberXp();
+    console.log(
+      `[SPECIAL EVENT] XP before: ${xpBeforeSurvey}, after reload: ${xpAfter}`,
+    );
+    expect(xpAfter).toBeGreaterThan(xpBeforeSurvey);
+  },
+);
